@@ -30,13 +30,6 @@ class FormResource extends Resource
         return FormsTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [

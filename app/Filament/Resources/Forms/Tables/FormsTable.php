@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Forms\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class FormsTable
@@ -13,10 +14,7 @@ class FormsTable
     {
         return $table
             ->columns([
-                //
-            ])
-            ->filters([
-                //
+                TextColumn::make('name'),
             ])
             ->recordActions([
                 EditAction::make(),

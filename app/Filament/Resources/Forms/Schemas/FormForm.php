@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Forms\Schemas;
 
+use App\Evalve\FormComponents\Rating;
+use App\Evalve\FormComponents\Select;
+use App\Evalve\FormComponents\Text;
 use Filament\Forms\Components\Builder;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -28,24 +30,9 @@ class FormForm
                             ->collapsible()
                             ->collapsed()
                             ->blocks([
-                                Builder\Block::make('text')
-                                    ->schema([
-                                        MarkdownEditor::make('content')
-                                            ->toolbarButtons([
-                                                ['heading'],
-                                                ['bold', 'italic', 'strike'],
-                                            ]),
-                                    ]),
-                                Builder\Block::make('select')
-                                    ->schema([
-                                        TextInput::make('label')
-                                            ->required(),
-                                        Repeater::make('options')
-                                            ->minItems(2)
-                                            ->schema([
-                                                TextInput::make('option')
-                                            ])
-                                    ])
+                                Builder\Block::make('text') ->schema(Text::make()),
+                                Builder\Block::make('select') ->schema(Select::make()),
+                                Builder\Block::make('rating')->schema(Rating::make())
                             ])
                     ]),
             ]);
