@@ -11,6 +11,7 @@ class SceneObject extends Model
     use HasUlids, HasTeam;
 
     protected $casts = [
+        'transform' => 'array',
         'properties' => 'array',
     ];
 }

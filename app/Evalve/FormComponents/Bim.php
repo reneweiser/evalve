@@ -12,36 +12,21 @@ class Bim
         return [
             TextInput::make('cad_id'),
             FusedGroup::make([
-                TextInput::make('survey_point_position_x')
+                TextInput::make('x')
                     ->numeric()
                     ->prefix('x')
                     ->required(),
-                TextInput::make('survey_point_position_y')
+                TextInput::make('y')
                     ->numeric()
                     ->prefix('y')
                     ->required(),
-                TextInput::make('survey_point_position_z')
+                TextInput::make('z')
                     ->numeric()
                     ->prefix('z')
                     ->required(),
             ])
+                ->statePath('survey_point_position')
                 ->label('Survey Point')
-                ->columns(3),
-            FusedGroup::make([
-                TextInput::make('rotation_x')
-                    ->numeric()
-                    ->prefix('x')
-                    ->required(),
-                TextInput::make('rotation_y')
-                    ->numeric()
-                    ->prefix('y')
-                    ->required(),
-                TextInput::make('rotation_z')
-                    ->numeric()
-                    ->prefix('z')
-                    ->required(),
-            ])
-                ->label('Rotation')
                 ->columns(3),
         ];
     }

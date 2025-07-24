@@ -25,8 +25,6 @@ class FormForm
                     ->collapsible()
                     ->collapsed()
                     ->schema([
-                        TextInput::make('page_title')
-                            ->required(),
                         Builder::make('page_content')
                             ->label('Fields')
                             ->collapsible()

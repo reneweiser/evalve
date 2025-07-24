@@ -14,7 +14,9 @@ class SceneObjectsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name'),
+                TextColumn::make('properties')
+                    ->formatStateUsing(fn (array $state): string => $state['type']),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -12,9 +12,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('team_id')->constrained();
             $table->string('name');
-            $table->float('position_x');
-            $table->float('position_y');
-            $table->float('position_z');
+            $table->json('transform')->nullable();
             $table->json('properties')->nullable();
             $table->timestamps();
         });

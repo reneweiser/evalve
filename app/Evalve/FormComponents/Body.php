@@ -11,35 +11,37 @@ class Body
     {
         return [
             FusedGroup::make([
-                TextInput::make('position_x')
+                TextInput::make('x')
                     ->numeric()
                     ->prefix('x')
                     ->required(),
-                TextInput::make('position_y')
+                TextInput::make('y')
                     ->numeric()
                     ->prefix('y')
                     ->required(),
-                TextInput::make('position_z')
+                TextInput::make('z')
                     ->numeric()
                     ->prefix('z')
                     ->required(),
             ])
+                ->statePath('position')
                 ->label('Position')
                 ->columns(3),
             FusedGroup::make([
-                TextInput::make('rotation_x')
+                TextInput::make('x')
                     ->numeric()
                     ->prefix('x')
                     ->required(),
-                TextInput::make('rotation_y')
+                TextInput::make('y')
                     ->numeric()
                     ->prefix('y')
                     ->required(),
-                TextInput::make('rotation_z')
+                TextInput::make('z')
                     ->numeric()
                     ->prefix('z')
                     ->required(),
             ])
+                ->statePath('rotation')
                 ->label('Rotation')
                 ->columns(3),
         ];
