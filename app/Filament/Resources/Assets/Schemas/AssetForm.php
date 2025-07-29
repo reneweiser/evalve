@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Assets\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -25,15 +26,32 @@ class AssetForm
                         'gltf_glb' => 'glTF/GLB',
                     ]),
                 Section::make('Unity AssetBundle')
+                    ->columnSpan(2)
+                    ->columns(2)
                     ->statePath('properties')
                     ->visible(fn (Get $get) => $get('type') === 'unity_asset_bundle')
                     ->schema([
                         FileUpload::make('bundle')
+                            ->disabledOn('edit')
+                            ->hiddenOn('edit')
                             ->directory('unity_asset_bundles')
                             ->disk('local'),
                         FileUpload::make('manifest')
+                            ->disabledOn('edit')
+                            ->hiddenOn('edit')
                             ->directory('unity_asset_bundles')
                             ->disk('local'),
+                        Repeater::make('assets')
+                            ->deletable(false)
+                            ->reorderable(false)
+                            ->addable(false)
+                            ->columnSpan(2)
+                            ->disabledOn('create')
+                            ->hiddenOn('create')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->disabled(),
+                            ])
                     ]),
                 Section::make('glTF/GLB')
                     ->statePath('properties')
