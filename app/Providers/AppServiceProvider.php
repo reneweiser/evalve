@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
         JsonResource::withoutWrapping();
+
+        if (App::environment('production')) {
+            URL::forceHttps();
+        }
     }
 }
