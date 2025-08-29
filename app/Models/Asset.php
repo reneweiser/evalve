@@ -30,6 +30,8 @@ class Asset extends Model
             $asset->properties = [
                 ...$asset->properties,
                 'assets' => $assets,
+                'unity_version' => $manifest['UnityVersion'],
+                'crc' => $manifest['CRC'],
             ];
         });
 

@@ -35,13 +35,21 @@ class AssetForm
                             ->disabledOn('edit')
                             ->hiddenOn('edit')
                             ->directory('unity_asset_bundles')
-                            ->disk('local'),
+                            ->disk('public'),
                         FileUpload::make('manifest')
                             ->disabledOn('edit')
                             ->hiddenOn('edit')
                             ->directory('unity_asset_bundles')
                             ->disk('local'),
+                        TextInput::make('unity_version')
+                            ->disabledOn(['create', 'edit'])
+                            ->hiddenOn('create'),
+                        TextInput::make('crc')
+                            ->label('Checksum')
+                            ->disabledOn(['create', 'edit'])
+                            ->hiddenOn('create'),
                         Repeater::make('assets')
+                            ->label('Elements')
                             ->deletable(false)
                             ->reorderable(false)
                             ->addable(false)
