@@ -36,12 +36,15 @@ class Asset extends Model
         });
 
         parent::deleting(function (Asset $asset) {
-            if ($asset->type === 'unity_asset_bundle') {
+            if ($asset->type === 'unity_asset_bundle' && Storage::exists($asset->properties['bundle'])) {
                 Storage::delete($asset->properties['bundle']);
+            }
+
+            if ($asset->type === 'unity_asset_bundle' && Storage::exists($asset->properties['manifset'])) {
                 Storage::delete($asset->properties['manifest']);
             }
 
-            if ($asset->type === 'gltf_glb') {
+            if ($asset->type === 'gltf_glb' && Storage::exists($asset->properties['glb'])) {
                 Storage::delete($asset->properties['glb']);
             }
         });
