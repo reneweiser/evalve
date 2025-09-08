@@ -32,10 +32,32 @@
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
-            document.getElementById('form.variant_0').addEventListener('change', e => setVisibility(e.target.value))
-            document.getElementById('form.variant_1').addEventListener('change', e => setVisibility(e.target.value))
-            document.getElementById('form.poi').addEventListener('change', e => setPoi(e.target.value))
-            document.getElementById('form.webview').addEventListener('change', e => createWebView(e.target.value))
+            window.addEventListener('model-options-changed', e => {
+                const groups = [
+                    'Umgebung',
+                    'Bahnhof',
+                    'Busbahnhof - Opt3',
+                    'Tunnel - Durchbruch',
+                ];
+
+                const value = e.detail[0].value;
+
+                const result = groups.map(group => value.includes(group) ? '+' + group : '-' + group);
+
+                setVisibility(result.join(','));
+            });
+
+            window.addEventListener('poi-selected', e => {
+                const poiName = e.detail[0].value;
+
+                setPoi(poiName);
+            });
+
+            window.addEventListener('webview-opened', e => {
+                const webViewUrl = e.detail[0].value;
+
+                createWebView(webViewUrl);
+            });
 
             client.createPOIController();
 

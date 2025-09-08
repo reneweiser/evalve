@@ -37,7 +37,6 @@ class AssetForm
                             ->directory('unity_asset_bundles')
                             ->disk('public'),
                         FileUpload::make('manifest')
-                            ->visible(fn (Get $get) => $get('bundle') === 'gltf_glb')
                             ->disabledOn('edit')
                             ->hiddenOn('edit')
                             ->directory('unity_asset_bundles')

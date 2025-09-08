@@ -7,6 +7,7 @@ use App\Evalve\FormComponents\Body;
 use App\Evalve\FormComponents\Checkpoint;
 use App\Evalve\FormComponents\Pose;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Schema;
@@ -53,6 +54,10 @@ class SceneObjectForm
                     ->statePath('transform.rotation')
                     ->label('Rotation')
                     ->columns(3),
+                FileUpload::make('imageUrl')
+                    ->label('Thumbnail')
+                    ->disk('public')
+                    ->directory('thumbnails'),
                 Builder::make('properties')
                     ->blocks([
                         Builder\Block::make('bim_data')

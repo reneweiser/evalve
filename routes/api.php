@@ -43,6 +43,8 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
         return \App\Models\Asset::all()->toResourceCollection();
     });
 
+    Route::post('/scene-objects/{sceneObject}/thumbnail', \App\Http\Controllers\Api\ThumbnailController::class);
+
     Route::get('/scene-objects/{sceneObject}', function (\App\Models\SceneObject $sceneObject) {
         return $sceneObject;
     });

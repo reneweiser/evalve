@@ -12,6 +12,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('team_id')->constrained();
             $table->string('name');
+            $table->string('imageUrl')->nullable();
             $table->json('transform')->nullable();
             $table->json('properties')->nullable();
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\ManageTeam;
 use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Livewire\ClientDownloads;
 use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -45,8 +46,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+//                AccountWidget::class,
+//                FilamentInfoWidget::class,
+                ClientDownloads::class
             ])
             ->middleware([
                 EncryptCookies::class,
