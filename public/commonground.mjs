@@ -5741,6 +5741,11 @@ _POIChangeRequest.TypeInfo = [
     "name": "visibility",
     "type": "String",
     "aggregate": 0
+  },
+  {
+    "name": "lastDBUpdateTimestamp",
+    "type": "Double",
+    "aggregate": 0
   }
 ];
 var POIChangeRequest = _POIChangeRequest;
@@ -5756,11 +5761,15 @@ var _WebView = class _WebView extends NetworkObject {
     super.setProperty(index, key, value);
     this[key] = value;
   }
-  static create(id, url, positioningMode = 2) {
+  static create(id, url, positioningMode = 0, width = 300, height = 200, transform = void 0, role = void 0) {
     var obj = new _WebView(id, "WebView", "WebView");
     obj.setProperty(0, "url", url);
     obj.setProperty(3, "showHeader", false);
     obj.setProperty(4, "positioningMode", positioningMode);
+    obj.setProperty(7, "width", width);
+    obj.setProperty(9, "height", height);
+    if (transform != null) obj.setProperty(5, "initialTransform", transform);
+    if (role != null) obj.setProperty(6, "roleFilter", role);
     return obj;
   }
 };
@@ -5788,6 +5797,16 @@ _WebView.TypeInfo = [
   {
     "name": "positioningMode",
     "type": "enum/PositioningMode",
+    "aggregate": 0
+  },
+  {
+    "name": "initialTransform",
+    "type": "SimpleTransform",
+    "aggregate": 0
+  },
+  {
+    "name": "roleFilter",
+    "type": "String",
     "aggregate": 0
   },
   {
@@ -5863,11 +5882,11 @@ var ControlClient = class {
       this.connection.sendMessage(m);
     });
   }
-  createWebView(url, positioningMode = 0, transform) {
+  createWebView(url, positioningMode = 0, width = 300, height = 200, transform = void 0, role = void 0) {
     return new Promise((resolve, reject) => {
       try {
         this.connection.getNextId((id) => {
-          var o = WebView.create(id, url, positioningMode);
+          var o = WebView.create(id, url, positioningMode, width, height, transform, role);
           var m = this.connection.createRegisterMessage(o);
           this.connection.sendMessage(m);
           resolve(o);
@@ -5882,6 +5901,9 @@ var ControlClient = class {
   }
   setTargetPoi(title) {
     POIChangeRequest.POIController.setPropertyByName("targetPoiTitle", title);
+  }
+  reloadPois() {
+    POIChangeRequest.POIController.setPropertyByName("lastDBUpdateTimestamp", this.connection.time);
   }
   setVisibility(visibility) {
     POIChangeRequest.POIController.setPropertyByName("visibility", visibility);

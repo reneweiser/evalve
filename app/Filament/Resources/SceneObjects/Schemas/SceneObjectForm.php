@@ -4,6 +4,7 @@ namespace App\Filament\Resources\SceneObjects\Schemas;
 
 use App\Evalve\FormComponents\Bim;
 use App\Evalve\FormComponents\Body;
+use App\Evalve\FormComponents\CGData;
 use App\Evalve\FormComponents\Checkpoint;
 use App\Evalve\FormComponents\Pose;
 use Filament\Forms\Components\Builder;
@@ -71,6 +72,10 @@ class SceneObjectForm
                             ->schema(Checkpoint::make()),
                         Builder\Block::make('pose')
                             ->schema(Pose::make()),
+                        Builder\Block::make('cgData')
+                            ->label('Commonground Data')
+                            ->maxItems(1)
+                            ->schema(CGData::make()),
                     ]),
             ]);
     }

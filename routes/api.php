@@ -68,4 +68,12 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/scene-objects', function () {
         return \App\Models\SceneObject::all();
     });
+
+    Route::get('/teams/{team}/scene-objects', function (\App\Models\Team $team) {
+        return $team->sceneObjects;
+    });
+
+    Route::get('/teams/{team}/asset-bundles', function (\App\Models\Team $team) {
+        return $team->assetBundles->toResourceCollection();
+    });
 });

@@ -2,14 +2,18 @@
 
 namespace App\Filament\Resources\SceneObjects\Pages;
 
+use App\Evalve\Consensive\PoiConverter;
 use App\Filament\Resources\SceneObjects\SceneObjectResource;
 use App\Models\SceneObject;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ListSceneObjects extends ListRecords
@@ -20,7 +24,75 @@ class ListSceneObjects extends ListRecords
     {
         return [
             CreateAction::make(),
-            Action::make('Import POIs')
+            Action::make('Push to Consensive')
+                ->schema([
+                    Select::make('pois')
+                        ->label('Select Pois to push')
+                        ->multiple()
+                        ->options(Filament::getTenant()->sceneObjects()->pluck('name', 'id'))
+                ])
+                ->action(function (array $data) {
+                    $pois = SceneObject::query()
+                        ->whereIn('id', $data['pois'])
+                        ->get()
+                        ->map(fn ($poi) => PoiConverter::convert($poi))
+                        ->toArray();
+                    $body = json_encode(['pois' => $pois]);
+
+                    $user = env('CONSENSIVE_USER');
+                    $password = env('CONSENSIVE_PASSWORD');
+                    $sceneId = env('CONSENSIVE_SCENE_ID');
+
+                    $accessToken = Http::withBasicAuth($user, $password)
+                        ->post('https://db2.vr4more.com/login/')
+                        ->json('accessToken');
+
+                    $response = Http::withHeaders([
+                        'Authorization' => "Token $accessToken",
+                        'Content-Type' => 'application/json',
+                    ])
+                        ->withBody($body)
+                        ->post("https://db2.vr4more.com/scenes/$sceneId/pois/reset/");
+
+                    if (!$response->successful()) {
+                        Notification::make()
+                            ->title('Request failed. VR4More responded: ' . $response->reason())
+                            ->danger()
+                            ->send();
+                        return;
+                    }
+
+                    collect($response->json('pois'))
+                        ->each(function ($poi) {
+                            $sceneObject = SceneObject::query()
+                                ->where('name', $poi['title'])
+                                ->first();
+
+                            $properties = collect($sceneObject->properties)
+                                ->reject(fn ($value) => $value['type'] === 'cgData')
+                                ->push([
+                                    'data' => [
+                                        'id' => $poi['id'],
+                                        'order' => $poi['order'],
+                                        'fixtureReference' => $poi['fixtureReference'],
+                                        'dwellTime' => $poi['dwellTime'],
+                                        'passthrough' => $poi['passthrough'],
+                                    ],
+                                    'type' => 'cgData',
+                                ])
+                                ->toArray();
+
+                            $sceneObject->update([
+                                'properties' => $properties,
+                            ]);
+                        });
+
+                    Notification::make()
+                        ->title('Data pushed to Commonground. VR4More responded: ' . $response->reason())
+                        ->success()
+                        ->send();
+                }),
+            Action::make('Import Pois')
                 ->schema([
                     FileUpload::make('json_file')
                         ->disk('local'),

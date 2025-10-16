@@ -8,4 +8,5 @@ Route::get('/', function () {
 });
 
 Route::get('bpl-test', \App\Filament\Pages\BplForm::class);
-
+Route::get('moderator', \App\Filament\Pages\ModeratorView::class)->name('public.moderator');
+Route::get('participant', \App\Filament\Pages\ParticipantView::class)->name('public.participant');
