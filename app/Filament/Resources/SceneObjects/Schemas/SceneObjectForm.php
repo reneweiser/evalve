@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SceneObjects\Schemas;
 
+use App\Evalve\FormComponents\Billboard;
 use App\Evalve\FormComponents\Bim;
 use App\Evalve\FormComponents\Body;
 use App\Evalve\FormComponents\CGData;
@@ -76,6 +77,9 @@ class SceneObjectForm
                             ->label('Commonground Data')
                             ->maxItems(1)
                             ->schema(CGData::make()),
+                        Builder\Block::make('billboard')
+                            ->maxItems(1)
+                            ->schema(Billboard::make()),
                     ]),
             ]);
     }
