@@ -40,4 +40,9 @@ class FormResource extends Resource
             'edit' => EditForm::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

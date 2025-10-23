@@ -1,28 +1,27 @@
 <?php
 
-namespace App\Filament\Resources\SceneObjects\Tables;
+namespace App\Filament\Resources\Questions\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class SceneObjectsTable
+class QuestionsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('imageUrl')
-                    ->disk('public')
-                    ->defaultImageUrl('https://placehold.co/150x150?text=Thumbnail+missing')
-                    ->imageSize(150),
-                TextColumn::make('name'),
+                TextColumn::make('type'),
+                TextColumn::make('text'),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

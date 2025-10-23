@@ -7,7 +7,9 @@ use App\Evalve\FormComponents\Bim;
 use App\Evalve\FormComponents\Body;
 use App\Evalve\FormComponents\CGData;
 use App\Evalve\FormComponents\Checkpoint;
+use App\Evalve\FormComponents\PollingField;
 use App\Evalve\FormComponents\Pose;
+use App\Evalve\FormComponents\Questions;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -61,6 +63,8 @@ class SceneObjectForm
                     ->disk('public')
                     ->directory('thumbnails'),
                 Builder::make('properties')
+                    ->collapsible()
+                    ->collapsed()
                     ->blocks([
                         Builder\Block::make('bim_data')
                             ->maxItems(1)
@@ -80,6 +84,12 @@ class SceneObjectForm
                         Builder\Block::make('billboard')
                             ->maxItems(1)
                             ->schema(Billboard::make()),
+                        Builder\Block::make('pollingField')
+                            ->maxItems(1)
+                            ->schema(PollingField::make()),
+                        Builder\Block::make('questions')
+                            ->maxItems(1)
+                            ->schema(Questions::make()),
                     ]),
             ]);
     }
