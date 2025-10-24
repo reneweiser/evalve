@@ -8,8 +8,17 @@ class ContentBlock extends Field
 {
     protected string $view = 'filament.forms.components.content-block';
 
-    public function getContent(): string
+    protected string | null $content = '';
+
+    public function content(string $question): static
     {
-        return 'Lorem Ipsum is simply dummy text of the printing.';
+        $this->content = $question;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->evaluate($this->content);
     }
 }

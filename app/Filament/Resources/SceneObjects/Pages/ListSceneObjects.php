@@ -3,12 +3,14 @@
 namespace App\Filament\Resources\SceneObjects\Pages;
 
 use App\Evalve\Consensive\PoiConverter;
+use App\Evalve\SceneObjectSettings;
 use App\Filament\Resources\SceneObjects\SceneObjectResource;
 use App\Models\SceneObject;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -24,6 +26,17 @@ class ListSceneObjects extends ListRecords
     {
         return [
             CreateAction::make(),
+            Action::make('settings')
+                ->fillForm(fn(): array => SceneObjectSettings::get())
+                ->schema([
+                    Repeater::make('modelGroups')
+                        ->schema([
+                            TextInput::make('name')
+                        ])
+                ])
+                ->action(function (array $data) {
+                    SceneObjectSettings::set($data);
+                }),
             Action::make('Push to Consensive')
                 ->schema([
                     Select::make('pois')

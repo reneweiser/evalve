@@ -9,12 +9,16 @@ use App\Evalve\FormComponents\CGData;
 use App\Evalve\FormComponents\Checkpoint;
 use App\Evalve\FormComponents\PollingField;
 use App\Evalve\FormComponents\Pose;
-use App\Evalve\FormComponents\Questions;
+use App\Evalve\FormComponents\Question;
+use App\Evalve\SceneObjectSettings;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class SceneObjectForm
 {
@@ -81,15 +85,25 @@ class SceneObjectForm
                             ->label('Commonground Data')
                             ->maxItems(1)
                             ->schema(CGData::make()),
-                        Builder\Block::make('billboard')
-                            ->maxItems(1)
-                            ->schema(Billboard::make()),
                         Builder\Block::make('pollingField')
                             ->maxItems(1)
                             ->schema(PollingField::make()),
-                        Builder\Block::make('questions')
-                            ->maxItems(1)
-                            ->schema(Questions::make()),
+                        Builder\Block::make('question')
+                            ->schema(Question::make()),
+                        Builder\Block::make('models')
+                            ->schema([
+                                Select::make('models')
+                                    ->multiple()
+                                    ->required()
+                                    ->options(function () {
+                                        return SceneObjectSettings::asCollection('modelGroups')
+                                            ->mapWithKeys(fn ($modelGroup) => [$modelGroup['name'] => $modelGroup['name']]);
+                                    })
+                            ]),
+                        Builder\Block::make('notes')
+                            ->schema([
+                                MarkdownEditor::make('notes')
+                            ]),
                     ]),
             ]);
     }

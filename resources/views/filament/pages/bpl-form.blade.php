@@ -6,7 +6,8 @@
 
 @push('scripts')
 <script type="module">
-        import { ControlClient } from './index.mjs';
+        import { ControlClient } from './commonground.mjs';
+
         var client = new ControlClient("wss://cg025-dev.vr4more.com/room/bpl-testing/");
         var activeWebViews = [];
 
@@ -53,6 +54,25 @@
             createWebView("https://consensive.com", 2, 160, 90, undefined, "Moderator");
         }
 
+        function toQuaternion(vector) {
+            const cx = Math.cos(vector.x * 0.5);
+            const sx = Math.sin(vector.x * 0.5);
+            const cy = Math.cos(vector.y * 0.5);
+            const sy = Math.sin(vector.y * 0.5);
+            const cz = Math.cos(vector.z * 0.5);
+            const sz = Math.sin(vector.z * 0.5);
+
+            return {
+                w: cx * cy * cz - sx * sy * sz,
+                x: cx * cy * cz + cx * sy * cz,
+                y: sx * cy * cz + cx * sy * sz,
+                z: cx * sy * cz - sx * cy * sz
+            };
+        }
+
+        console.log(toQuaternion({x: 8, y: 5, z: 2}))
+        console.log(window.Quaternion.fromEuler(8,5,2))
+
         window.addEventListener('poi-selected', e => {
             const poiName = e.detail[0].value;
 
@@ -62,7 +82,12 @@
         window.addEventListener('webview-opened', e => {
             const url = e.detail[0].value;
 
-            createWebView(url, 2, 100, 100);
+            // createWebView(url, 2, 100, 100);
+            createWebView(url, 1, 200, 200, {
+                position: { x:0, y:0, z:0 },
+                rotation: { x:0, y:0, z:0, w:1 },
+                scale: { x:0.5, y:0.5, z:0.5 }
+            });
         });
 
         // document.addEventListener("DOMContentLoaded", async () => {

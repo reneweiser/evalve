@@ -36,6 +36,25 @@
             async function createWebView(url, positioningMode = 0, width=300, height=200, transform=undefined, role=undefined) {
                 activeWebViews.push(await client.createWebView(url, positioningMode, width, height, transform, role));
             }
+
+            window.addEventListener('model-selected', e => {
+                const modelName = e.detail[0].value;
+
+                console.log(modelName);
+                // setVisibility(modelName);
+            });
+
+            window.addEventListener('poi-selected', e => {
+                const poiName = e.detail[0].value;
+
+                // setPoi(poiName);
+            });
+
+            window.addEventListener('ask-question', e => {
+                const data = e.detail[0].value;
+
+                console.log(data);
+            })
         </script>
     @endpush
 </x-filament-panels::page.simple>

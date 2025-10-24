@@ -2,6 +2,7 @@
 
 namespace App\Evalve\FormComponents;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
 
@@ -10,6 +11,7 @@ class PollingField
     public static function make(): array
     {
         return [
+            FileUpload::make('image')->disk('public'),
             FusedGroup::make([
                 TextInput::make('width')
                     ->numeric()
