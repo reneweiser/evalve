@@ -8,6 +8,7 @@ use App\Filament\Forms\Components\PublishQuestion;
 use App\Models\Question;
 use App\Models\SceneObject;
 use App\Models\PropertyType;
+use App\Models\Team;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\MarkdownEditor;
@@ -44,21 +45,28 @@ class ModeratorView extends SimplePage implements HasForms
     use InteractsWithForms;
 
     protected string $view = 'filament.pages.moderator-view';
-    protected Width | string | null $maxContentWidth = Width::ScreenLarge;
+    protected Width | string | null $maxContentWidth = Width::ScreenExtraLarge;
     public array $data = [
         'models' => [],
         'notes' => [],
     ];
     public array $modelGroups;
+    public string $name;
 
     public function mount(): void
     {
+        $this->name = request()->get('name');
         $this->modelGroups = $this->getModelGroups();
+    }
+
+    public function hasLogo(): bool
+    {
+        return false;
     }
 
     public function getHeading(): string|Htmlable
     {
-        return '';
+        return $this->name;
     }
 
     public function form(Schema $schema): Schema
@@ -70,7 +78,7 @@ class ModeratorView extends SimplePage implements HasForms
                     ->statePath('data')
                     ->tabs([
                         Tabs\Tab::make('Pois')
-                            ->columns(3)
+                            ->columns(4)
                             ->schema([
                                 Section::make('')
                                     ->contained(false)
@@ -79,12 +87,16 @@ class ModeratorView extends SimplePage implements HasForms
                                             ->label('POIs')
                                             ->live()
                                             ->afterStateUpdated(function ($state, $component) {
-                                                $component->getLivewire()->dispatch('poi-selected', ['value' => $state]);
+                                                $sceneObject = SceneObject::find($state);
+                                                $component->getLivewire()->dispatch('poi-selected', ['value' => [
+                                                    'poiName' => $sceneObject->name,
+                                                    'visibility' => SceneObjectSettings::asString($sceneObject->getProperty(PropertyType::models)['models'] ?? []),
+                                                ]]);
                                             })
                                             ->options(SceneObject::where('team_id', '01k4me8csqakbm0mf00a2vp666')->pluck('name', 'id')),
                                     ]),
                                 Section::make('')
-                                    ->columnSpan(2)
+                                    ->columnSpan(3)
                                     ->contained(false)
                                     ->schema(function (Get $get, $component): array {
                                         if ($get('pois') === null) return [
@@ -112,10 +124,11 @@ class ModeratorView extends SimplePage implements HasForms
                                                         $component->getLivewire()->dispatch('model-selected', ['value' => $allModels]);
                                                     }),
                                             ])
-                                            ->schema([
+                                            ->footer([
                                                 Action::make('notes')
                                                     ->schema(function () use ($sceneObject) {
-                                                        $content = $sceneObject->getProperty(PropertyType::notes)['notes'];
+                                                        $property = $sceneObject->getProperty(PropertyType::notes);
+                                                        $content = $property ? $property['notes'] : '';
                                                         return [
                                                             Text::make(str($content)->markdown()->toHtmlString())
                                                                 ->extraAttributes(['class' => 'fi-prose', 'style' => 'font-size: 1.5rem;'])
@@ -127,6 +140,7 @@ class ModeratorView extends SimplePage implements HasForms
                                             ]);
                                         foreach ($sceneObject->getProperties(PropertyType::question) as $questionData) {
                                             $r[] = Section::make('Individuelle Abstimmung')
+                                                ->key($questionData['questionId'])
                                                 ->icon(Heroicon::User)
                                                 ->headerActions([
                                                     Action::make('showModels')
@@ -141,22 +155,25 @@ class ModeratorView extends SimplePage implements HasForms
                                                             $component->getLivewire()->dispatch('model-selected', ['value' => $allModels]);
                                                         }),
                                                 ])
+                                                ->footer([
+                                                    Action::make('openQuestion')->label('Öffnen')
+                                                        ->action(fn () => $component->getLivewire()->dispatch('open-question', [
+                                                            'value' => [
+                                                                'participantView' => route('public.participant', ['questionId' => $questionData['questionId']]),
+                                                                'billboardSettings' => $questionData,
+                                                            ]
+                                                        ])),
+                                                    Action::make('closeQuestion')->label('Schließen')
+                                                        ->action(fn () => $component->getLivewire()->dispatch('close-question', [
+                                                            'value' => [
+                                                                'participantView' => route('public.participant', ['questionId' => $questionData['questionId']]),
+                                                                'billboardSettings' => $questionData,
+                                                            ]
+                                                        ])),
+                                                ])
                                                 ->schema([
                                                     Text::make($questions[$questionData['questionId']])
                                                         ->size(TextSize::Large),
-                                                    ActionGroup::make([
-                                                        Action::make('openQuestion')->label('Öffnen')
-                                                            ->action(fn () => $component->getLivewire()->dispatch('ask-question', [
-                                                                'value' => [
-                                                                    'participantView' => route('public.participant', ['questionId' => $questionData['questionId']]),
-                                                                    'billboardSettings' => $questionData,
-                                                                ]
-                                                            ])),
-                                                        Action::make('closeQuestion')->label('Schließen'),
-                                                    ])
-                                                        ->buttonGroup()
-                                                        ->size(Size::Large)
-                                                        ->label('Aktionen zu dieser Frage'),
                                                 ]);
                                         }
                                         $r[] = Section::make('Öffentliche Abstimmung')
@@ -169,8 +186,16 @@ class ModeratorView extends SimplePage implements HasForms
                                                 ),
                                                 ActionGroup::make([
                                                     Action::make('openPolling')
-                                                        ->url(route('public.polling', ['question' => $sceneObject->getProperties(PropertyType::question)->pluck('questionId')]), true)
-                                                        ->label('Öffnen'),
+                                                        ->label('Öffnen')
+                                                        ->action(function () use ($component, $sceneObject) {
+                                                            $pollingField = $sceneObject->getProperty(PropertyType::pollingField);
+                                                            return $component->getLivewire()->dispatch('open-polling', [
+                                                                'value' => [
+                                                                    'pollingView' => route('public.polling', ['image' => $pollingField['image'],]),
+                                                                    'data' => $pollingField,
+                                                                ]
+                                                            ]);
+                                                        }),
                                                     Action::make('closePolling')
                                                         ->label('Schließen'),
                                                 ])

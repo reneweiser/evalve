@@ -13,7 +13,7 @@ Route::get('moderator', \App\Filament\Pages\ModeratorView::class)->name('public.
 Route::get('participant', \App\Filament\Pages\ParticipantView::class)->name('public.participant');
 
 Route::get('billboard', fn() => 'billboard placeholder')->name('public.billboard');
-
-Route::get('polling/{question}', function (Question $question) {
-    return 'polling placeholder for: '.$question->text;
+Route::get('polling', function () {
+    $image = \Illuminate\Support\Facades\Storage::disk('public')->url(request()->get('image'));
+    return view('polling', ['image' => $image]);
 })->name('public.polling');
