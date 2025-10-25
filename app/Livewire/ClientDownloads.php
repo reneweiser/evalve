@@ -6,6 +6,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
@@ -48,7 +49,10 @@ class ClientDownloads extends Widget implements HasActions, HasSchemas
             Section::make('Panels')->schema([
                 ActionGroup::make([
                     Action::make('exampleSession')
-                        ->url(route('public.moderator', ['name' => 'example-session']), true),
+                        ->url(route('public.moderator', [
+                            'name' => 'example-session',
+                            'team' => Filament::getTenant()->id
+                        ]), true),
                     Action::make('participant'),
                 ])
                     ->buttonGroup()

@@ -52,10 +52,12 @@ class ModeratorView extends SimplePage implements HasForms
     ];
     public array $modelGroups;
     public string $name;
+    public string $team;
 
     public function mount(): void
     {
         $this->name = request()->get('name');
+        $this->team = request()->get('team');
         $this->modelGroups = $this->getModelGroups();
     }
 
@@ -93,7 +95,7 @@ class ModeratorView extends SimplePage implements HasForms
                                                     'visibility' => SceneObjectSettings::asString($sceneObject->getProperty(PropertyType::models)['models'] ?? []),
                                                 ]]);
                                             })
-                                            ->options(SceneObject::where('team_id', '01k4me8csqakbm0mf00a2vp666')->pluck('name', 'id')),
+                                            ->options(SceneObject::where('team_id', $this->team)->pluck('name', 'id')),
                                     ]),
                                 Section::make('')
                                     ->columnSpan(3)
