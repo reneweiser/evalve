@@ -181,37 +181,29 @@ class ModeratorView extends SimplePage implements HasForms
                                         $r[] = Section::make('Öffentliche Abstimmung')
                                             ->visible(fn () => !empty($sceneObject->getProperties(PropertyType::pollingField)->toArray()))
                                             ->icon(Heroicon::UserGroup)
+                                            ->footer([
+                                                Action::make('openPolling')
+                                                    ->label('Öffnen')
+                                                    ->action(function () use ($component, $sceneObject) {
+                                                        $pollingField = $sceneObject->getProperty(PropertyType::pollingField);
+                                                        return $component->getLivewire()->dispatch('open-polling', [
+                                                            'value' => [
+                                                                'pollingView' => route('public.polling', ['image' => $pollingField['image'],]),
+                                                                'data' => $pollingField,
+                                                            ]
+                                                        ]);
+                                                    }),
+                                                Action::make('closePolling')
+                                                    ->action(function () use ($component, $sceneObject) {
+                                                        return $component->getLivewire()->dispatch('close-polling');
+                                                    })
+                                                    ->label('Schließen'),
+                                            ])
                                             ->schema([
                                                 Image::make(
                                                     url: Storage::disk('public')->url($sceneObject->getProperty(PropertyType::pollingField)['image'] ?? ''),
                                                     alt: 'Polling Field'
                                                 ),
-                                                ActionGroup::make([
-                                                    Action::make('openPolling')
-                                                        ->label('Öffnen')
-                                                        ->action(function () use ($component, $sceneObject) {
-                                                            $pollingField = $sceneObject->getProperty(PropertyType::pollingField);
-                                                            return $component->getLivewire()->dispatch('open-polling', [
-                                                                'value' => [
-                                                                    'pollingView' => route('public.polling', ['image' => $pollingField['image'],]),
-                                                                    'data' => $pollingField,
-                                                                ]
-                                                            ]);
-                                                        }),
-                                                    Action::make('closePolling')
-                                                        ->action(function () use ($component, $sceneObject) {
-                                                            $pollingField = $sceneObject->getProperty(PropertyType::pollingField);
-                                                            return $component->getLivewire()->dispatch('close-polling', [
-                                                                'value' => [
-                                                                    'billboardSettings' => $pollingField,
-                                                                ]
-                                                            ]);
-                                                        })
-                                                        ->label('Schließen'),
-                                                ])
-                                                    ->buttonGroup()
-                                                    ->size(Size::Large)
-                                                    ->label('Aktionen zu dieser Frage')
                                             ]);
                                         return $r;
                                     })

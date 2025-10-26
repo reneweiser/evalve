@@ -128,5 +128,6 @@ window.addEventListener('open-polling', async e => {
 });
 
 window.addEventListener('close-polling', e => {
+    console.log('close-polling');
     client.deleteObject(cache.pollingField)
 })
