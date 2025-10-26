@@ -71,7 +71,6 @@
         }
 
         console.log(toQuaternion({x: 8, y: 5, z: 2}))
-        console.log(window.Quaternion.fromEuler(8,5,2))
 
         window.addEventListener('poi-selected', e => {
             const poiName = e.detail[0].value;

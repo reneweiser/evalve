@@ -166,7 +166,7 @@ class ModeratorView extends SimplePage implements HasForms
                                                             ]
                                                         ])),
                                                     Action::make('closeQuestion')->label('Schließen')
-                                                        ->action(fn () => $component->getLivewire()->dispatch('close-question', [
+                                                        ->action(fn () => $component->getLivewire()->dispatch('close-webview', [
                                                             'value' => [
                                                                 'participantView' => route('public.participant', ['questionId' => $questionData['questionId']]),
                                                                 'billboardSettings' => $questionData,
@@ -199,6 +199,14 @@ class ModeratorView extends SimplePage implements HasForms
                                                             ]);
                                                         }),
                                                     Action::make('closePolling')
+                                                        ->action(function () use ($component, $sceneObject) {
+                                                            $pollingField = $sceneObject->getProperty(PropertyType::pollingField);
+                                                            return $component->getLivewire()->dispatch('close-polling', [
+                                                                'value' => [
+                                                                    'billboardSettings' => $pollingField,
+                                                                ]
+                                                            ]);
+                                                        })
                                                         ->label('Schließen'),
                                                 ])
                                                     ->buttonGroup()
@@ -228,9 +236,14 @@ class ModeratorView extends SimplePage implements HasForms
                         Tabs\Tab::make('')
                             ->icon(Heroicon::Cog)
                             ->schema([
-                                Action::make('open_moderator_panel_in_scene'),
-                                Action::make('close_all_questions'),
-                                Action::make('refresh_pois'),
+                                Action::make('open_moderator_panel_in_scene')
+                                    ->disabled(),
+                                Action::make('close_all_questions')
+                                    ->disabled(),
+                                Action::make('refresh_pois')
+                                    ->action(function ($component) {
+                                        return $component->getLivewire()->dispatch('refresh-pois');
+                                    })
                             ]),
                     ]),
             ]);
