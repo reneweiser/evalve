@@ -88,6 +88,11 @@ class ParticipantView extends SimplePage implements HasForms
             return;
         }
 
+        // Image questions don't require submission
+        if ($this->question->type === 'image') {
+            return;
+        }
+
         if (ResponseSubmissionService::hasResponded($this->question->id, $this->getSession())) {
             Notification::make()
                 ->warning()

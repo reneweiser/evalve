@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Questions\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
@@ -27,6 +28,7 @@ class QuestionForm
                         'semantic_differential' => 'Semantic Differential',
                         'single_choice' => 'Single Choice',
                         'multiple_choice' => 'Multiple Choice',
+                        'image' => 'Image',
                     ]),
                 Section::make('Semantic Differential')
                     ->contained(false)
@@ -59,6 +61,19 @@ class QuestionForm
                     ->schema([
                         Repeater::make('options')
                             ->schema([TextInput::make('option')])
+                    ]),
+                Section::make('Image')
+                    ->contained(false)
+                    ->visible(fn (Get $get) => $get('type') === 'image')
+                    ->statePath('properties')
+                    ->schema([
+                        FileUpload::make('image_path')
+                            ->label('Image')
+                            ->disk('public')
+                            ->directory('questions')
+                            ->image()
+                            ->maxSize(5120)
+                            ->required(),
                     ]),
             ]);
     }

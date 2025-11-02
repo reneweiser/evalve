@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\ParticipantView\Factories;
 
+use App\Filament\Pages\ParticipantView\Fields\ImageField;
 use App\Filament\Pages\ParticipantView\Fields\MultipleChoiceField;
 use App\Filament\Pages\ParticipantView\Fields\SemanticDifferentialField;
 use App\Filament\Pages\ParticipantView\Fields\SingleChoiceField;
@@ -20,6 +21,7 @@ class QuestionFieldFactory
             'semantic_differential' => SemanticDifferentialField::make($question),
             'single_choice' => SingleChoiceField::make($question),
             'multiple_choice' => MultipleChoiceField::make($question),
+            'image' => ImageField::make($question),
             default => throw new InvalidArgumentException("Unknown question type: {$question->type}")
         };
     }
@@ -30,6 +32,7 @@ class QuestionFieldFactory
             'semantic_differential',
             'single_choice',
             'multiple_choice',
+            'image',
         ];
     }
 }
