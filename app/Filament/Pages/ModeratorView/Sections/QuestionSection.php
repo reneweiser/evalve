@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Text;
 use Filament\Support\Enums\Size;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Str;
 
 class QuestionSection
 {
@@ -54,7 +55,7 @@ class QuestionSection
         return Action::make('openQuestion')
             ->label(__('moderator.open'))
             ->action(function ($component) use ($questionData) {
-                $participantUrl = route('public.participant', ['questionId' => $questionData->questionId]);
+                $participantUrl = self::buildParticipantUrl($questionData->questionId);
                 $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                 $dispatcher->dispatchOpenQuestion($questionData, $participantUrl);
             });
@@ -69,5 +70,20 @@ class QuestionSection
                 $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                 $dispatcher->dispatchCloseWebview($questionData, $participantUrl);
             });
+    }
+
+    /**
+     * Build participant URL with VR client placeholders.
+     *
+     * The $USERNAME$ and $ROLE$ placeholders are substituted by the VR client
+     * with actual user values before the webview is displayed in the scene.
+     */
+    private static function buildParticipantUrl(string $questionId): string
+    {
+        return Str::of(route('public.participant', [
+            'questionId' => $questionId,
+            'userAlias' => '$USERNAME$',
+            'userRole' => '$ROLE$',
+        ]))->replace('%24', '$')->value();
     }
 }

@@ -11,18 +11,30 @@ class SettingsTabSchema
 {
     public static function make(): Tabs\Tab
     {
+        $actions = [
+            Action::make('open_moderator_panel_in_scene')
+                ->disabled(),
+            Action::make('close_all_questions')
+                ->disabled(),
+            Action::make('refresh_pois')
+                ->action(function ($component) {
+                    $dispatcher = new SceneObjectDispatcher($component->getLivewire());
+                    $dispatcher->dispatchRefreshPois();
+                }),
+        ];
+
+        // Add test webview action in local environment only
+        if (app()->environment('local')) {
+            array_unshift($actions, Action::make('open_test_page')
+                ->label('Test VR Webview')
+                ->action(function ($component) {
+                    $dispatcher = new SceneObjectDispatcher($component->getLivewire());
+                    $dispatcher->dispatchOpenWebview('https://dev.vr4more.com/dan/bpl/test_content.html?userAlias=$USERNAME$&userRole=$ROLE$');
+                }));
+        }
+
         return Tabs\Tab::make('')
             ->icon(Heroicon::Cog)
-            ->schema([
-                Action::make('open_moderator_panel_in_scene')
-                    ->disabled(),
-                Action::make('close_all_questions')
-                    ->disabled(),
-                Action::make('refresh_pois')
-                    ->action(function ($component) {
-                        $dispatcher = new SceneObjectDispatcher($component->getLivewire());
-                        $dispatcher->dispatchRefreshPois();
-                    }),
-            ]);
+            ->schema($actions);
     }
 }
