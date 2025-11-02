@@ -25,13 +25,21 @@ class ParticipantView extends SimplePage implements HasForms
 
     public ?Question $question = null;
 
+    public ?string $userAlias = null;
+
+    public ?string $userRole = null;
+
     protected ?ParticipantSession $session = null;
+    public ?array $data = null;
 
     public function mount(): void
     {
         $this->questionId = request()->get('questionId');
+        $this->userAlias = request()->get('userAlias');
+        $this->userRole = request()->get('userRole');
         $this->question = QuestionLoaderService::load($this->questionId);
         $this->session = ParticipantSession::fromRequest();
+        $this->form->fill();
 
         if ($this->question && ResponseSubmissionService::hasResponded($this->question->id, $this->getSession())) {
             Notification::make()
@@ -50,7 +58,13 @@ class ParticipantView extends SimplePage implements HasForms
     protected function getSession(): ParticipantSession
     {
         if (! $this->session) {
-            $this->session = ParticipantSession::fromRequest();
+            // Use persisted Livewire properties if available (from VR clients)
+            if ($this->userAlias) {
+                $this->session = new ParticipantSession($this->userAlias, $this->userRole);
+            } else {
+                // Fall back to session-based identity for web users
+                $this->session = ParticipantSession::fromRequest();
+            }
         }
 
         return $this->session;
@@ -58,9 +72,9 @@ class ParticipantView extends SimplePage implements HasForms
 
     public function form(Schema $schema): Schema
     {
-        return $schema->schema(
+        return $schema->components(
             QuestionFieldFactory::make($this->question)
-        );
+        )->statePath('data');
     }
 
     public function submit(): void
