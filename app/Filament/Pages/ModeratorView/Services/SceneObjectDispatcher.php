@@ -43,6 +43,21 @@ class SceneObjectDispatcher
         ]);
     }
 
+    /**
+     * Open a webview in the VR scene with the given URL.
+     *
+     * The URL can contain placeholder values like $USERNAME$ and $ROLE$
+     * which will be substituted by the VR client with actual user values.
+     */
+    public function dispatchOpenWebview(string $url): void
+    {
+        $this->livewire->dispatch('open-webview', [
+            'value' => [
+                'url' => $url,
+            ],
+        ]);
+    }
+
     public function dispatchCloseWebview(QuestionData $questionData, string $participantUrl): void
     {
         $this->livewire->dispatch('close-webview', [

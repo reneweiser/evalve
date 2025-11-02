@@ -104,7 +104,14 @@ window.addEventListener('open-question', async e => {
     });
 
     cache.questions[value.billboardSettings.questionId] = webview;
-    console.log(cache)
+});
+
+window.addEventListener('open-webview', async e => {
+    const value = e.detail[0].value;
+
+    console.log('open-webview', value);
+    const webview = await createWebView(value.url, 0, 200, 200);
+    cache.questions[value.url] = webview;
 });
 
 window.addEventListener('close-webview', e => {
