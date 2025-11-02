@@ -25,7 +25,7 @@ class ParticipantView extends SimplePage implements HasForms
 
     public ?Question $question = null;
 
-    public ?ParticipantSession $session = null;
+    protected ?ParticipantSession $session = null;
 
     public function mount(): void
     {
@@ -33,7 +33,7 @@ class ParticipantView extends SimplePage implements HasForms
         $this->question = QuestionLoaderService::load($this->questionId);
         $this->session = ParticipantSession::fromRequest();
 
-        if ($this->question && ResponseSubmissionService::hasResponded($this->question->id, $this->session)) {
+        if ($this->question && ResponseSubmissionService::hasResponded($this->question->id, $this->getSession())) {
             Notification::make()
                 ->warning()
                 ->title(__('participant.already_responded'))
@@ -45,6 +45,15 @@ class ParticipantView extends SimplePage implements HasForms
     public function getTitle(): string|Htmlable
     {
         return $this->question?->text ?? __('participant.question_not_found');
+    }
+
+    protected function getSession(): ParticipantSession
+    {
+        if (! $this->session) {
+            $this->session = ParticipantSession::fromRequest();
+        }
+
+        return $this->session;
     }
 
     public function form(Schema $schema): Schema
@@ -65,7 +74,7 @@ class ParticipantView extends SimplePage implements HasForms
             return;
         }
 
-        if (ResponseSubmissionService::hasResponded($this->question->id, $this->session)) {
+        if (ResponseSubmissionService::hasResponded($this->question->id, $this->getSession())) {
             Notification::make()
                 ->warning()
                 ->title(__('participant.already_responded'))
@@ -78,7 +87,7 @@ class ParticipantView extends SimplePage implements HasForms
             $formData = $this->form->getState();
             $responseData = ResponseData::fromFormData($this->question, $formData);
 
-            ResponseSubmissionService::store($responseData, $this->session);
+            ResponseSubmissionService::store($responseData, $this->getSession());
 
             Notification::make()
                 ->success()
