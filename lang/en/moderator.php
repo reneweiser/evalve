@@ -12,6 +12,8 @@ return [
     'public_voting' => 'Public Voting',
     'open' => 'Open',
     'close' => 'Close',
+    'show_results' => 'Show Results',
+    'hide_results' => 'Hide Results',
     'models' => 'Models',
     'show_hide_models_individually' => 'Show/hide models individually.',
 ];

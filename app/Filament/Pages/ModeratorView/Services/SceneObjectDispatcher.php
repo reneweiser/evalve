@@ -87,4 +87,19 @@ class SceneObjectDispatcher
     {
         $this->livewire->dispatch('refresh-pois');
     }
+
+    public function dispatchShowBillboard(QuestionData $questionData, string $billboardUrl): void
+    {
+        $this->livewire->dispatch('show-billboard', [
+            'value' => [
+                'billboardView' => $billboardUrl,
+                'billboardSettings' => $questionData->billboardSettings,
+            ],
+        ]);
+    }
+
+    public function dispatchHideBillboard(): void
+    {
+        $this->livewire->dispatch('hide-billboard');
+    }
 }

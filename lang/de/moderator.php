@@ -12,6 +12,8 @@ return [
     'public_voting' => 'Öffentliche Abstimmung',
     'open' => 'Öffnen',
     'close' => 'Schließen',
+    'show_results' => 'Ergebnisse anzeigen',
+    'hide_results' => 'Ergebnisse ausblenden',
     'models' => 'Modelle',
     'show_hide_models_individually' => 'Modelle einzeln ein/ausblenden.',
 ];

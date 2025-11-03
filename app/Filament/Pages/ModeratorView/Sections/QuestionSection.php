@@ -28,6 +28,8 @@ class QuestionSection
             ->footer([
                 self::buildOpenAction($questionData),
                 self::buildCloseAction($questionData),
+                self::buildShowResultsAction($questionData),
+                self::buildHideResultsAction($questionData),
             ])
             ->schema([
                 Text::make($questions[$questionData->questionId] ?? '')
@@ -69,6 +71,31 @@ class QuestionSection
                 $participantUrl = route('public.participant', ['questionId' => $questionData->questionId]);
                 $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                 $dispatcher->dispatchCloseWebview($questionData, $participantUrl);
+            });
+    }
+
+    private static function buildShowResultsAction(QuestionData $questionData): Action
+    {
+        return Action::make('showResults')
+            ->label(__('moderator.show_results'))
+            ->color('success')
+            ->icon(Heroicon::ChartBar)
+            ->action(function ($component) use ($questionData) {
+                $billboardUrl = route('public.billboard', ['questionId' => $questionData->questionId]);
+                $dispatcher = new SceneObjectDispatcher($component->getLivewire());
+                $dispatcher->dispatchShowBillboard($questionData, $billboardUrl);
+            });
+    }
+
+    private static function buildHideResultsAction(QuestionData $questionData): Action
+    {
+        return Action::make('hideResults')
+            ->label(__('moderator.hide_results'))
+            ->color('danger')
+            ->icon(Heroicon::EyeSlash)
+            ->action(function ($component) {
+                $dispatcher = new SceneObjectDispatcher($component->getLivewire());
+                $dispatcher->dispatchHideBillboard();
             });
     }
 

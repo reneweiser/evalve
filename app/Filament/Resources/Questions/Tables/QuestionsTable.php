@@ -20,7 +20,6 @@ class QuestionsTable
                 TextColumn::make('text'),
             ])
             ->recordActions([
-                ViewAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
