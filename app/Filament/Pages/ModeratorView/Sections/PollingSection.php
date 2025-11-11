@@ -29,7 +29,7 @@ class PollingSection
                 self::buildCloseAction($sceneObject),
             ])
             ->schema([
-                Text::make($pollingData->data['name']),
+                Text::make($pollingData->data['name'] ?? ''),
                 Image::make(
                     url: Storage::disk('public')->url($pollingData->image),
                     alt: 'Polling Field'
