@@ -6,7 +6,8 @@ let activeWebViews = [];
 
 const cache = {
     questions: {},
-    pollingField: undefined
+    pollingField: undefined,
+    billboard: undefined
 };
 
 function setPoi(title) {
@@ -97,7 +98,7 @@ window.addEventListener('open-question', async e => {
     const value = e.detail[0].value;
 
     console.log('open-question', value);
-    const webview = await createWebView(value.participantView, 1, value.billboardSettings.size.width, value.billboardSettings.size.height, {
+    const webview = await createWebView(value.participantView, 2, value.billboardSettings.size.width, value.billboardSettings.size.height, {
         position: value.billboardSettings.position,
         rotation: eulerToQuaternion(value.billboardSettings.rotation),
         scale: { x:0.5, y:0.5, z:0.5 }
@@ -136,5 +137,28 @@ window.addEventListener('open-polling', async e => {
 
 window.addEventListener('close-polling', e => {
     console.log('close-polling');
-    client.deleteObject(cache.pollingField)
-})
+    if (cache.pollingField) {
+        client.deleteObject(cache.pollingField)
+        cache.pollingField = undefined;
+    }
+});
+
+window.addEventListener('show-billboard', async e => {
+    const value = e.detail[0].value;
+
+    console.log('show-billboard', value);
+    cache.billboard = await createWebView(value.url, 1, value.data.size.width, value.data.size.height, {
+        position: value.data.position,
+        rotation: eulerToQuaternion(value.data.rotation),
+        scale: {x: 0.5, y: 0.5, z: 0.5}
+    });
+});
+
+window.addEventListener('hide-billboard', e => {
+    console.log('hide-billboard');
+
+    if (cache.billboard) {
+        client.deleteObject(cache.billboard)
+        cache.billboard = undefined;
+    }
+});

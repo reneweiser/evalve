@@ -92,8 +92,8 @@ class SceneObjectDispatcher
     {
         $this->livewire->dispatch('show-billboard', [
             'value' => [
-                'billboardView' => $billboardUrl,
-                'billboardSettings' => $questionData->billboardSettings,
+                'url' => $billboardUrl,
+                'data' => $questionData->billboardSettings,
             ],
         ]);
     }
