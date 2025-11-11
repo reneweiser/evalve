@@ -9,6 +9,7 @@ use App\Models\SceneObject;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Image;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Text;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +29,7 @@ class PollingSection
                 self::buildCloseAction($sceneObject),
             ])
             ->schema([
+                Text::make($pollingData->data['name']),
                 Image::make(
                     url: Storage::disk('public')->url($pollingData->image),
                     alt: 'Polling Field'

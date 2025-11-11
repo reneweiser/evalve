@@ -11,6 +11,7 @@ class PollingField
     public static function make(): array
     {
         return [
+            TextInput::make('name'),
             FileUpload::make('image')->disk('public'),
             FusedGroup::make([
                 TextInput::make('width')
