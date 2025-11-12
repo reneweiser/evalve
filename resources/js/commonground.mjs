@@ -5756,6 +5756,8 @@ var _WebView = class _WebView extends NetworkObject {
   constructor(id, name, typeName) {
     super(id, name, typeName);
     this.id = id;
+    log.debug("+++ CREATE WebView", id);
+    _WebView.allWebViews.push(this);
   }
   setProperty(index, key, value) {
     super.setProperty(index, key, value);
@@ -5764,24 +5766,26 @@ var _WebView = class _WebView extends NetworkObject {
   static create(id, url, positioningMode = 0, width = 300, height = 200, transform = void 0, role = void 0) {
     var obj = new _WebView(id, "WebView", "WebView");
     obj.setProperty(0, "url", url);
-    obj.setProperty(3, "showHeader", false);
-    obj.setProperty(4, "positioningMode", positioningMode);
-    obj.setProperty(7, "width", width);
-    obj.setProperty(9, "height", height);
-    if (transform != null) obj.setProperty(5, "initialTransform", transform);
-    if (role != null) obj.setProperty(6, "roleFilter", role);
+    obj.setProperty(2, "showHeader", false);
+    obj.setProperty(3, "positioningMode", positioningMode);
+    obj.setProperty(6, "width", width);
+    obj.setProperty(8, "height", height);
+    if (transform != null) obj.setProperty(4, "initialTransform", transform);
+    if (role != null) obj.setProperty(5, "roleFilter", role);
     return obj;
   }
+  destroy() {
+    log.debug("+++ DESTROY WebView", this.id);
+    var self2 = this;
+    _WebView.allWebViews = _WebView.allWebViews.filter((v) => v == self2);
+    super.destroy();
+  }
 };
+_WebView.allWebViews = [];
 _WebView.TypeInfo = [
   {
     "name": "url",
     "type": "String",
-    "aggregate": 0
-  },
-  {
-    "name": "parent",
-    "type": "NetworkObject",
     "aggregate": 0
   },
   {
@@ -5845,6 +5849,12 @@ var ControlClient = class {
         return new POIChangeRequest(id, name, typeName, connection);
       }
     );
+    this.connection.registerObjectFactory(
+      "WebView",
+      (id, name, typeName, connection) => {
+        return new WebView(id, name, typeName);
+      }
+    );
     this.connection.on("connect", () => {
       log.info("Connected");
       this.connection.registerType("NetworkNavigationInvitePose", NetworkNavigationInvitePose.TypeInfo);
@@ -5887,6 +5897,7 @@ var ControlClient = class {
       try {
         this.connection.getNextId((id) => {
           var o = WebView.create(id, url, positioningMode, width, height, transform, role);
+          o.persistence = 1 /* Scene */;
           var m = this.connection.createRegisterMessage(o);
           this.connection.sendMessage(m);
           resolve(o);
@@ -5895,6 +5906,12 @@ var ControlClient = class {
         reject(error);
       }
     });
+  }
+  deleteAllWebViews() {
+    for (var webView of WebView.allWebViews) {
+      this.deleteObject(webView);
+      webView.destroy();
+    }
   }
   deleteObject(o) {
     this.connection.send_deleteObject(o.id, true);
