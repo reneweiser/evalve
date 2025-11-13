@@ -4,7 +4,7 @@ const client = new ControlClient("wss://cg025-dev.vr4more.com/room/bpl-testing/"
 
 let activeWebViews = [];
 
-const cache = {
+let cache = {
     questions: {},
     pollingField: undefined,
     billboard: undefined
@@ -122,6 +122,17 @@ window.addEventListener('close-webview', e => {
     const question = cache.questions[value.billboardSettings.questionId];
     client.deleteObject(question)
     delete cache.questions[value.billboardSettings.questionId];
+});
+
+window.addEventListener('close-all-webviews', e => {
+    console.log('close-all-webviews');
+    client.deleteAllWebViews();
+
+    cache = {
+        questions: {},
+        pollingField: undefined,
+        billboard: undefined
+    };
 });
 
 window.addEventListener('open-polling', async e => {

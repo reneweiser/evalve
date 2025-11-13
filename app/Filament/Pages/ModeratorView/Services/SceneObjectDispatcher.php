@@ -68,6 +68,11 @@ class SceneObjectDispatcher
         ]);
     }
 
+    public function dispatchCloseAllWebviews(): void
+    {
+        $this->livewire->dispatch('close-all-webviews');
+    }
+
     public function dispatchOpenPolling(PollingFieldData $pollingData, string $pollingUrl): void
     {
         $this->livewire->dispatch('open-polling', [

@@ -14,8 +14,11 @@ class SettingsTabSchema
         $actions = [
             Action::make('open_moderator_panel_in_scene')
                 ->disabled(),
-            Action::make('close_all_questions')
-                ->disabled(),
+            Action::make('close_all_webviews')
+                ->action(function ($component) {
+                    $dispatcher = new SceneObjectDispatcher($component->getLivewire());
+                    $dispatcher->dispatchCloseAllWebviews();
+                }),
             Action::make('refresh_pois')
                 ->action(function ($component) {
                     $dispatcher = new SceneObjectDispatcher($component->getLivewire());
