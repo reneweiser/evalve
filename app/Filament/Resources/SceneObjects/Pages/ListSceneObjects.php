@@ -52,9 +52,9 @@ class ListSceneObjects extends ListRecords
                         ->toArray();
                     $body = json_encode(['pois' => $pois]);
 
-                    $user = env('CONSENSIVE_USER');
-                    $password = env('CONSENSIVE_PASSWORD');
-                    $sceneId = env('CONSENSIVE_SCENE_ID');
+                    $user = config('services.vr4more.user');
+                    $password = config('services.vr4more.password');
+                    $sceneId = config('services.vr4more.scene_id');
 
                     $accessToken = Http::withBasicAuth($user, $password)
                         ->post('https://db2.vr4more.com/login/')
