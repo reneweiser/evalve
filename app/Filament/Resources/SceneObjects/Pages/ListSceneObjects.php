@@ -16,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ListSceneObjects extends ListRecords
@@ -70,8 +71,10 @@ class ListSceneObjects extends ListRecords
                     if (!$response->successful()) {
                         Notification::make()
                             ->title('Request failed. VR4More responded: ' . $response->reason())
+                            ->body($response->body())
                             ->danger()
                             ->send();
+                        Log::error($response->body());
                         return;
                     }
 
@@ -103,6 +106,7 @@ class ListSceneObjects extends ListRecords
                     Notification::make()
                         ->title('Data pushed to Commonground. VR4More responded: ' . $response->reason())
                         ->success()
+                        ->body($response->body())
                         ->send();
                 }),
             Action::make('Import Pois')
