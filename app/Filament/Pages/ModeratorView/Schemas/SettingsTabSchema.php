@@ -38,6 +38,7 @@ class SettingsTabSchema
 
         return Tabs\Tab::make('')
             ->icon(Heroicon::Cog)
+            ->key('moderator-settings-tab')
             ->schema($actions);
     }
 }
