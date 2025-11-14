@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\ModeratorView\Services;
 
+use App\Evalve\SceneObjectSettings;
 use App\Filament\Pages\ModeratorView\ValueObjects\ModelVisibilityData;
 use App\Filament\Pages\ModeratorView\ValueObjects\PollingFieldData;
 use App\Filament\Pages\ModeratorView\ValueObjects\QuestionData;
@@ -35,10 +36,17 @@ class SceneObjectDispatcher
 
     public function dispatchOpenQuestion(QuestionData $questionData, string $participantUrl): void
     {
+        $settings = SceneObjectSettings::get();
+
         $this->livewire->dispatch('open-question', [
             'value' => [
                 'participantView' => $participantUrl,
                 'billboardSettings' => $questionData->billboardSettings,
+                'data' => [
+                    'width' => $settings['width'],
+                    'height' => $settings['height'],
+                    'zoom' => $settings['zoom'],
+                ]
             ],
         ]);
     }

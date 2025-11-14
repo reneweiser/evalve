@@ -17,6 +17,9 @@ class SceneObjectSettings
     {
         return Cache::remember('soSettings', 3600, function () {
             return Storage::disk('local')->json('soSettings.json') ?? [
+                'width' => 160,
+                'height' => 60,
+                'zoom' => 1,
                 'modelGroups' => []
             ];
         });

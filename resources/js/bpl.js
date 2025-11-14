@@ -98,10 +98,10 @@ window.addEventListener('open-question', async e => {
     const value = e.detail[0].value;
 
     console.log('open-question', value);
-    const webview = await createWebView(value.participantView, 2, value.billboardSettings.size.width, value.billboardSettings.size.height, {
+    const webview = await createWebView(value.participantView, 2, value.data.width, value.data.height, {
         position: value.billboardSettings.position,
         rotation: eulerToQuaternion(value.billboardSettings.rotation),
-        scale: { x:0.5, y:0.5, z:0.5 }
+        // scale: { x:0.5, y:0.5, z:0.5 }
     });
 
     cache.questions[value.billboardSettings.questionId] = webview;

@@ -15,6 +15,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\FusedGroup;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -30,6 +32,20 @@ class ListSceneObjects extends ListRecords
             Action::make('settings')
                 ->fillForm(fn(): array => SceneObjectSettings::get())
                 ->schema([
+                    Section::make('Avatar Webview')
+                        ->schema([
+                            FusedGroup::make([
+                                TextInput::make('width')
+                                    ->prefix('Width')
+                                    ->numeric(),
+                                TextInput::make('height')
+                                    ->prefix('Height')
+                                    ->numeric(),
+                                TextInput::make('zoom')
+                                    ->prefix('Zoom')
+                                    ->numeric(),
+                            ])->columns(3)
+                        ]),
                     Repeater::make('modelGroups')
                         ->schema([
                             TextInput::make('name')

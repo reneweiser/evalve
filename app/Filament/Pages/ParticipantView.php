@@ -12,7 +12,10 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ParticipantView extends SimplePage implements HasForms
@@ -20,6 +23,7 @@ class ParticipantView extends SimplePage implements HasForms
     use InteractsWithForms;
 
     protected string $view = 'filament.pages.participant-view';
+    protected Width | string | null $maxWidth = Width::ScreenLarge;
 
     public ?string $questionId = null;
 
@@ -52,7 +56,7 @@ class ParticipantView extends SimplePage implements HasForms
 
     public function getTitle(): string|Htmlable
     {
-        return $this->question?->text ?? __('participant.question_not_found');
+        return '';
     }
 
     protected function getSession(): ParticipantSession
@@ -73,7 +77,11 @@ class ParticipantView extends SimplePage implements HasForms
     public function form(Schema $schema): Schema
     {
         return $schema->components(
-            QuestionFieldFactory::make($this->question)
+            [
+                Text::make($this->question?->text ?? __('participant.question_not_found'))
+                    ->size(TextSize::Large),
+                ...QuestionFieldFactory::make($this->question)
+            ]
         )->statePath('data');
     }
 
@@ -122,5 +130,15 @@ class ParticipantView extends SimplePage implements HasForms
                 ->body($e->getMessage())
                 ->send();
         }
+    }
+
+    public function hasLogo(): bool
+    {
+        return false;
+    }
+
+    public function hasTopbar(): bool
+    {
+        return false;
     }
 }
