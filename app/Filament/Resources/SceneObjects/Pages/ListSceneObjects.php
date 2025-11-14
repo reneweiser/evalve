@@ -15,8 +15,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ListSceneObjects extends ListRecords
@@ -44,6 +44,10 @@ class ListSceneObjects extends ListRecords
                         ->label('Select Pois to push')
                         ->multiple()
                         ->options(Filament::getTenant()->sceneObjects()->pluck('name', 'id'))
+                        ->hintAction(fn (Select $component) => Action::make('select_all')
+                            ->label('Select All')
+                            ->action(fn () => $component->state(Filament::getTenant()->sceneObjects()->pluck('id')))
+                        )
                 ])
                 ->action(function (array $data) {
                     $pois = SceneObject::query()
@@ -53,28 +57,27 @@ class ListSceneObjects extends ListRecords
                         ->toArray();
                     $body = json_encode(['pois' => $pois]);
 
-                    $user = config('services.vr4more.user');
-                    $password = config('services.vr4more.password');
                     $sceneId = config('services.vr4more.scene_id');
 
-                    $accessToken = Http::withBasicAuth($user, $password)
-                        ->post('https://db2.vr4more.com/login/')
-                        ->json('accessToken');
+                    $accessToken = Cache::remember('vr4more_auth_token', 3600 * 6, function () {
+                        $user = config('services.vr4more.user');
+                        $password = config('services.vr4more.password');
 
-                    $response = Http::withHeaders([
-                        'Authorization' => "Token $accessToken",
-                        'Content-Type' => 'application/json',
-                    ])
-                        ->withBody($body)
-                        ->post("https://db2.vr4more.com/scenes/$sceneId/pois/reset/");
+                        return Http::withBasicAuth($user, $password)
+                            ->post(config('services.vr4more.url').'/login/')
+                            ->json('accessToken');
+                    });
+
+                    $response = Http::withBody($body)
+                        ->withHeaders(['Authorization' => "Token $accessToken"])
+                        ->post(config('services.vr4more.url')."/scenes/$sceneId/pois/reset/");
 
                     if (!$response->successful()) {
                         Notification::make()
                             ->title('Request failed. VR4More responded: ' . $response->reason())
-                            ->body($response->body())
                             ->danger()
                             ->send();
-                        Log::error($response->body());
+
                         return;
                     }
 
@@ -106,7 +109,6 @@ class ListSceneObjects extends ListRecords
                     Notification::make()
                         ->title('Data pushed to Commonground. VR4More responded: ' . $response->reason())
                         ->success()
-                        ->body($response->body())
                         ->send();
                 }),
             Action::make('Import Pois')

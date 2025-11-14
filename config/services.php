@@ -39,6 +39,7 @@ return [
         'user' => env('VR4MORE_USER'),
         'password' => env('VR4MORE_PASSWORD'),
         'scene_id' => env('VR4MORE_SCENE_ID'),
+        'url' => env('VR4MORE_URL'),
     ]
 
 ];

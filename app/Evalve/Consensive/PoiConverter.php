@@ -16,6 +16,7 @@ final class PoiConverter
                 'scale' => 1.0,
                 'overrideBlackWhitelists' => false,
             ])
+            ->values()
             ->toArray();
 
         return [
