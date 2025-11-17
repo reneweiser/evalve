@@ -67,6 +67,8 @@ class SceneObjectForm
                     ->disk('public')
                     ->directory('thumbnails'),
                 Builder::make('properties')
+                    ->label('Properties (Drag to reorder - Questions & Polling Fields will appear in this order)')
+                    ->helperText('Questions and Polling Fields will be displayed in the moderator panel in the order they appear here.')
                     ->collapsible()
                     ->collapsed()
                     ->blocks([

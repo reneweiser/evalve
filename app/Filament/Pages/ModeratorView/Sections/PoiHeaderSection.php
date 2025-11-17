@@ -18,6 +18,7 @@ class PoiHeaderSection
     {
         return Section::make(__('moderator.poi_label', ['name' => $sceneObject->name]))
             ->icon(Heroicon::MapPin)
+            ->key('poi_header-'.$sceneObject->id)
             ->headerActions([
                 self::buildModelsAction($sceneObject),
             ])

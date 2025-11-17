@@ -81,17 +81,15 @@ class PoisTabSchema
             ->pluck('text', 'id')
             ->all();
 
-        $sections = [];
-        $sections[] = PoiHeaderSection::make($sceneObject);
-
-        foreach ($sceneObject->getProperties(PropertyType::question) as $questionData) {
-            $sections[] = QuestionSection::make($questionData, $questions);
-        }
-
-        foreach ($sceneObject->getProperties(PropertyType::pollingField) as $pollingFieldData) {
-            $sections[] = PollingSection::make($sceneObject, $pollingFieldData);
-        }
-
-        return $sections;
+        return $sceneObject->getPropertiesInOrder(PropertyType::question, PropertyType::pollingField)
+            ->map(function ($property) use ($sceneObject, $questions) {
+                return match ($property['type']) {
+                    'question' => QuestionSection::make($property['data'], $questions),
+                    'pollingField' => PollingSection::make($sceneObject, $property['data']),
+                };
+            })
+            ->prepend(PoiHeaderSection::make($sceneObject))
+            ->values()
+            ->toArray();
     }
 }

@@ -29,6 +29,14 @@ class SceneObject extends Model
         $toArray = $this->getProperties($type)->toArray();
         return empty($toArray) ? null : $toArray[0];
     }
+
+    public function getPropertiesInOrder(PropertyType ...$types): Collection
+    {
+        $typeNames = collect($types)->map(fn ($type) => $type->name)->all();
+
+        return collect($this->properties ?? [])
+            ->filter(fn (array $property): bool => in_array($property['type'] ?? null, $typeNames));
+    }
 }
 
 enum PropertyType
