@@ -1,4 +1,5 @@
 import {ControlClient} from './commonground';
+import hash from "hash-it";
 
 const client = new ControlClient("wss://cg025-dev.vr4more.com/room/bpl-testing/");
 
@@ -7,7 +8,8 @@ let activeWebViews = [];
 let cache = {
     questions: {},
     pollingField: undefined,
-    billboard: undefined
+    billboard: undefined,
+    webViews: {}
 };
 
 function setPoi(title) {
@@ -131,7 +133,8 @@ window.addEventListener('close-all-webviews', e => {
     cache = {
         questions: {},
         pollingField: undefined,
-        billboard: undefined
+        billboard: undefined,
+        webViews: {}
     };
 });
 
@@ -139,18 +142,29 @@ window.addEventListener('open-polling', async e => {
     const value = e.detail[0].value;
 
     console.log('open-polling', value);
-    cache.pollingField = await createWebView(value.pollingView, 1, value.data.size.width, value.data.size.height, {
+    const webView = await createWebView(value.pollingView, 1, value.data.size.width, value.data.size.height, {
         position: value.data.position,
         rotation: eulerToQuaternion(value.data.rotation),
         scale: {x: 0.5, y: 0.5, z: 0.5}
     });
+
+    const pollingView = hash(value.pollingView);
+    if (Object.hasOwn(cache.webViews, pollingView)) {
+        client.deleteObject(cache.webViews[pollingView])
+        delete cache.webViews[pollingView];
+    }
+
+    cache.webViews[pollingView] = webView;
 });
 
 window.addEventListener('close-polling', e => {
-    console.log('close-polling');
-    if (cache.pollingField) {
-        client.deleteObject(cache.pollingField)
-        cache.pollingField = undefined;
+    const value = e.detail[0].value;
+
+    const pollingView = hash(value.pollingView);
+    console.log('close-polling', pollingView);
+    if (Object.hasOwn(cache.webViews, pollingView)) {
+        client.deleteObject(cache.webViews[pollingView])
+        delete cache.webViews[pollingView];
     }
 });
 

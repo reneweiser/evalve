@@ -88,8 +88,8 @@ class PoisTabSchema
             $sections[] = QuestionSection::make($questionData, $questions);
         }
 
-        if (! empty($sceneObject->getProperties(PropertyType::pollingField)->toArray())) {
-            $sections[] = PollingSection::make($sceneObject);
+        foreach ($sceneObject->getProperties(PropertyType::pollingField) as $pollingFieldData) {
+            $sections[] = PollingSection::make($sceneObject, $pollingFieldData);
         }
 
         return $sections;

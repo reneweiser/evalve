@@ -91,9 +91,11 @@ class SceneObjectDispatcher
         ]);
     }
 
-    public function dispatchClosePolling(): void
+    public function dispatchClosePolling(string $pollingUrl): void
     {
-        $this->livewire->dispatch('close-polling');
+        $this->livewire->dispatch('close-polling', [
+            'value' => ['pollingView' => $pollingUrl],
+        ]);
     }
 
     public function dispatchRefreshPois(): void
