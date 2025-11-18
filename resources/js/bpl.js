@@ -1,7 +1,10 @@
 import {ControlClient} from './commonground';
 import hash from "hash-it";
 
-const client = new ControlClient("wss://cg025-dev.vr4more.com/room/bpl-testing/");
+const webSocketPath = "wss://cg025.vr4more.com/room/bpl-testing/";
+
+console.log('Connecting through: ' + webSocketPath)
+const client = new ControlClient(webSocketPath);
 
 let activeWebViews = [];
 

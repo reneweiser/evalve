@@ -15,12 +15,12 @@ class SceneObjectSettings
 
     public static function get(): array
     {
-        return Cache::remember('soSettings', 3600, function () {
+        return Cache::remember('soSettings', 10, function () {
             return Storage::disk('local')->json('soSettings.json') ?? [
                 'width' => 160,
                 'height' => 60,
                 'zoom' => 1,
-                'modelGroups' => []
+                'modelGroups' => [],
             ];
         });
     }
@@ -35,6 +35,7 @@ class SceneObjectSettings
         return collect(self::get()['modelGroups'])
             ->map(function (array $model) use ($activeModels): string {
                 $model = $model['name'];
+
                 return in_array($model, $activeModels) ? "+$model" : "-$model";
             })
             ->join(',');

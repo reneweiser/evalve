@@ -21,7 +21,7 @@ class ModelGroupService
     {
         return cache()->remember(
             "model_groups_{$teamId}",
-            3600,
+            10,
             fn (): array => $this->getModelGroups()
         );
     }
