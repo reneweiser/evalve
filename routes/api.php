@@ -47,6 +47,11 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
     Route::patch('/scene-objects/{sceneObject}/thumbnail', \App\Http\Controllers\Api\ThumbnailController::class);
     Route::patch('/scene-objects/{sceneObject}/transform', \App\Http\Controllers\Api\TransformController::class);
 
+    Route::get('/scene-objects/{sceneObject}/poses', [\App\Http\Controllers\Api\PoseController::class, 'index']);
+    Route::post('/scene-objects/{sceneObject}/poses', [\App\Http\Controllers\Api\PoseController::class, 'store']);
+    Route::patch('/scene-objects/{sceneObject}/poses/{uuid}', [\App\Http\Controllers\Api\PoseController::class, 'update']);
+    Route::delete('/scene-objects/{sceneObject}/poses/{uuid}', [\App\Http\Controllers\Api\PoseController::class, 'destroy']);
+
     Route::get('/scene-objects/{sceneObject}', function (\App\Models\SceneObject $sceneObject) {
         return $sceneObject;
     });
