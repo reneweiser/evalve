@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\SceneObjects\Schemas;
 
-use App\Evalve\FormComponents\Billboard;
 use App\Evalve\FormComponents\Bim;
 use App\Evalve\FormComponents\Body;
 use App\Evalve\FormComponents\CGData;
@@ -18,7 +17,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Storage;
 
 class SceneObjectForm
 {
@@ -88,7 +86,6 @@ class SceneObjectForm
                             ->maxItems(1)
                             ->schema(CGData::make()),
                         Builder\Block::make('pollingField')
-                            ->maxItems(1)
                             ->schema(PollingField::make()),
                         Builder\Block::make('question')
                             ->schema(Question::make()),
@@ -100,11 +97,11 @@ class SceneObjectForm
                                     ->options(function () {
                                         return SceneObjectSettings::asCollection('modelGroups')
                                             ->mapWithKeys(fn ($modelGroup) => [$modelGroup['name'] => $modelGroup['name']]);
-                                    })
+                                    }),
                             ]),
                         Builder\Block::make('notes')
                             ->schema([
-                                MarkdownEditor::make('notes')
+                                MarkdownEditor::make('notes'),
                             ]),
                     ]),
             ]);
