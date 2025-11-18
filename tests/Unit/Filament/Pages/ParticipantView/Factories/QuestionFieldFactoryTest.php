@@ -102,7 +102,7 @@ class QuestionFieldFactoryTest extends TestCase
             'semantic_differential',
             'single_choice',
             'multiple_choice',
-            'image'
+            'image',
         ], $types);
     }
 }
