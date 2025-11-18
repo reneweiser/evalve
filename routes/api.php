@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', function (Request $request) {
     $credentials = $request->only('email', 'password');
 
-    if (!Auth::attempt($credentials)) {
+    if (! Auth::attempt($credentials)) {
         return response()->json(['message' => 'Invalid login details.'], 401);
     }
 
@@ -44,6 +44,8 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
     });
 
     Route::post('/scene-objects/{sceneObject}/thumbnail', \App\Http\Controllers\Api\ThumbnailController::class);
+    Route::patch('/scene-objects/{sceneObject}/thumbnail', \App\Http\Controllers\Api\ThumbnailController::class);
+    Route::patch('/scene-objects/{sceneObject}/transform', \App\Http\Controllers\Api\TransformController::class);
 
     Route::get('/scene-objects/{sceneObject}', function (\App\Models\SceneObject $sceneObject) {
         return $sceneObject;

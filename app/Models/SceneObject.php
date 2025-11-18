@@ -9,7 +9,15 @@ use Illuminate\Support\Collection;
 
 class SceneObject extends Model
 {
-    use HasUlids, HasTeam;
+    use HasTeam, HasUlids;
+
+    protected $fillable = [
+        'name',
+        'imageUrl',
+        'transform',
+        'properties',
+        'team_id',
+    ];
 
     protected $casts = [
         'transform' => 'array',
@@ -27,6 +35,7 @@ class SceneObject extends Model
     public function getProperty(PropertyType $type)
     {
         $toArray = $this->getProperties($type)->toArray();
+
         return empty($toArray) ? null : $toArray[0];
     }
 

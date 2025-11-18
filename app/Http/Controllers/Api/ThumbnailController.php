@@ -26,31 +26,32 @@ class ThumbnailController extends Controller
                 $file = $request->file('thumbnail');
 
                 // Generate unique filename
-                $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+                $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
 
                 // Store the file in storage/app/public/thumbnails
                 $path = $file->storeAs('thumbnails', $filename, 'public');
 
-                // Generate URL for the stored file
-                $url = Storage::url($path);
+                // Update the scene object's imageUrl
+                $sceneObject->update([
+                    'imageUrl' => $path,
+                ]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Thumbnail uploaded successfully',
-                    'url' => $url,
-                    'path' => $path
+                    'data' => $sceneObject->refresh(),
                 ], 200);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => 'No thumbnail file provided'
+                'message' => 'No thumbnail file provided',
             ], 400);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to upload thumbnail: ' . $e->getMessage()
+                'message' => 'Failed to upload thumbnail: '.$e->getMessage(),
             ], 500);
         }
     }
