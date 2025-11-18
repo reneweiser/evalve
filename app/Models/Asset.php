@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Asset extends Model
 {
-    use HasUlids, HasTeam;
+    use HasTeam, HasUlids;
 
     protected $casts = [
         'properties' => 'array',

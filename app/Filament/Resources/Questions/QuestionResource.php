@@ -18,7 +18,8 @@ use UnitEnum;
 class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
-    protected static string | UnitEnum | null $navigationGroup = 'Elements';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Elements';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

@@ -58,7 +58,7 @@ class ImportPois extends Command
             'team_id' => $teamId,
             'transform' => [
                 'position' => $poi['position'],
-                'rotation' => [ 'x' => 0.0, 'y' => 0.0, 'z' => 0.0, ],
+                'rotation' => ['x' => 0.0, 'y' => 0.0, 'z' => 0.0],
             ],
             'properties' => self::makeProperties($poi),
         ]);

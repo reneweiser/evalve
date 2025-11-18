@@ -8,7 +8,7 @@ class ContentBlock extends Field
 {
     protected string $view = 'filament.forms.components.content-block';
 
-    protected string | null $content = '';
+    protected ?string $content = '';
 
     public function content(string $question): static
     {

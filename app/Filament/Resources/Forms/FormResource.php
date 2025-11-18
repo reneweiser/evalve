@@ -20,7 +20,8 @@ class FormResource extends Resource
     protected static ?string $model = Form::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-    protected static string | UnitEnum | null $navigationGroup = 'Elements';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Elements';
 
     public static function form(Schema $schema): Schema
     {

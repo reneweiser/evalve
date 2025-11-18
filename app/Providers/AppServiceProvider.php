@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Filament\Pages\ModeratorView;
 use App\Filament\Pages\ParticipantView;
-use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -40,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
             fn (): string => Blade::render('@vite(\'resources/js/app.js\')'),
             scopes: [
                 ParticipantView::class,
-                ModeratorView::class
+                ModeratorView::class,
             ]
         );
 

@@ -3,8 +3,6 @@
 namespace App\Filament\Resources\Questions\Schemas;
 
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -52,7 +50,7 @@ class QuestionForm
                     ->statePath('properties')
                     ->schema([
                         Repeater::make('options')
-                            ->schema([TextInput::make('option')])
+                            ->schema([TextInput::make('option')]),
                     ]),
                 Section::make('Multiple Choice')
                     ->contained(false)
@@ -60,7 +58,7 @@ class QuestionForm
                     ->statePath('properties')
                     ->schema([
                         Repeater::make('options')
-                            ->schema([TextInput::make('option')])
+                            ->schema([TextInput::make('option')]),
                     ]),
                 Section::make('Image')
                     ->contained(false)

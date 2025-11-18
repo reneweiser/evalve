@@ -27,19 +27,19 @@ class AssociateUserWithTeam extends Command
      */
     public function handle()
     {
-        $email = $this->choice('User email', User::pluck("email")->toArray());
-        $teamId = $this->choice("Provide team id", Team::pluck('id')->toArray());
+        $email = $this->choice('User email', User::pluck('email')->toArray());
+        $teamId = $this->choice('Provide team id', Team::pluck('id')->toArray());
 
-        $user = User::query()->where("email", $email)->first();
+        $user = User::query()->where('email', $email)->first();
 
-        if (!$user) {
-            $this->error("User not found");
+        if (! $user) {
+            $this->error('User not found');
         }
 
-        $team = Team::query()->where("id", $teamId)->first();
+        $team = Team::query()->where('id', $teamId)->first();
 
-        if (!$team) {
-            $this->error("Team not found");
+        if (! $team) {
+            $this->error('Team not found');
         }
 
         $user->teams()->attach($teamId);

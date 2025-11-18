@@ -59,7 +59,7 @@ class AssetForm
                             ->schema([
                                 TextInput::make('name')
                                     ->disabled(),
-                            ])
+                            ]),
                     ]),
                 Section::make('glTF/GLB')
                     ->statePath('properties')

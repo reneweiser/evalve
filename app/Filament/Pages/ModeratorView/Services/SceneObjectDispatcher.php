@@ -46,7 +46,7 @@ class SceneObjectDispatcher
                     'width' => $settings['width'],
                     'height' => $settings['height'],
                     'zoom' => $settings['zoom'],
-                ]
+                ],
             ],
         ]);
     }

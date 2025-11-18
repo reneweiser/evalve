@@ -14,11 +14,11 @@ class CGData
                 ->type('number')
                 ->label('POI ID')
                 ->disabled(),
-//            TextInput::make('fixtureReference'),
-//            TextInput::make('order')
-//                ->type('number')
-//                ->disabled(),
-//            Toggle::make('passthrough')
+            //            TextInput::make('fixtureReference'),
+            //            TextInput::make('order')
+            //                ->type('number')
+            //                ->disabled(),
+            //            Toggle::make('passthrough')
         ];
     }
 }

@@ -30,7 +30,7 @@ class ListSceneObjects extends ListRecords
         return [
             CreateAction::make(),
             Action::make('settings')
-                ->fillForm(fn(): array => SceneObjectSettings::get())
+                ->fillForm(fn (): array => SceneObjectSettings::get())
                 ->schema([
                     Section::make('Avatar Webview')
                         ->schema([
@@ -44,12 +44,12 @@ class ListSceneObjects extends ListRecords
                                 TextInput::make('zoom')
                                     ->prefix('Zoom')
                                     ->numeric(),
-                            ])->columns(3)
+                            ])->columns(3),
                         ]),
                     Repeater::make('modelGroups')
                         ->schema([
-                            TextInput::make('name')
-                        ])
+                            TextInput::make('name'),
+                        ]),
                 ])
                 ->action(function (array $data) {
                     SceneObjectSettings::set($data);
@@ -63,7 +63,7 @@ class ListSceneObjects extends ListRecords
                         ->hintAction(fn (Select $component) => Action::make('select_all')
                             ->label('Select All')
                             ->action(fn () => $component->state(Filament::getTenant()->sceneObjects()->pluck('id')))
-                        )
+                        ),
                 ])
                 ->action(function (array $data) {
                     $pois = SceneObject::query()
@@ -88,9 +88,9 @@ class ListSceneObjects extends ListRecords
                         ->withHeaders(['Authorization' => "Token $accessToken"])
                         ->post(config('services.vr4more.url')."/scenes/$sceneId/pois/reset/");
 
-                    if (!$response->successful()) {
+                    if (! $response->successful()) {
                         Notification::make()
-                            ->title('Request failed. VR4More responded: ' . $response->reason())
+                            ->title('Request failed. VR4More responded: '.$response->reason())
                             ->danger()
                             ->send();
 
@@ -123,7 +123,7 @@ class ListSceneObjects extends ListRecords
                         });
 
                     Notification::make()
-                        ->title('Data pushed to Commonground. VR4More responded: ' . $response->reason())
+                        ->title('Data pushed to Commonground. VR4More responded: '.$response->reason())
                         ->success()
                         ->send();
                 }),
@@ -139,7 +139,7 @@ class ListSceneObjects extends ListRecords
                         'team_id' => Filament::getTenant()->id,
                         'transform' => [
                             'position' => $poi['position'],
-                            'rotation' => [ 'x' => 0.0, 'y' => 0.0, 'z' => 0.0, ],
+                            'rotation' => ['x' => 0.0, 'y' => 0.0, 'z' => 0.0],
                         ],
                         'properties' => self::makeProperties($poi),
                     ]);
@@ -150,7 +150,7 @@ class ListSceneObjects extends ListRecords
                             $poi
                         );
                     }
-                })
+                }),
         ];
     }
 

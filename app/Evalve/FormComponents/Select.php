@@ -17,7 +17,7 @@ class Select
             Repeater::make('options')
                 ->minItems(2)
                 ->schema([
-                    TextInput::make('option')
+                    TextInput::make('option'),
                 ]),
         ];
     }

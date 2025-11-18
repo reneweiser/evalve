@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\BillboardController;
-use App\Models\Question;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,5 +14,6 @@ Route::get('participant', \App\Filament\Pages\ParticipantView::class)->name('pub
 Route::get('billboard/{questionId}', [BillboardController::class, 'showResults'])->name('public.billboard');
 Route::get('polling', function () {
     $image = \Illuminate\Support\Facades\Storage::disk('public')->url(request()->get('image'));
+
     return view('polling', ['image' => $image]);
 })->name('public.polling');

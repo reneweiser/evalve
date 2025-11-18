@@ -30,11 +30,11 @@ class FormForm
                             ->collapsible()
                             ->collapsed()
                             ->blocks([
-                                Builder\Block::make('text') ->schema(Text::make()),
-                                Builder\Block::make('select') ->schema(Select::make()),
+                                Builder\Block::make('text')->schema(Text::make()),
+                                Builder\Block::make('select')->schema(Select::make()),
                                 Builder\Block::make('rating')->schema(Rating::make()),
                                 Builder\Block::make('variant_comparison')->schema(VariantComparison::make()),
-                            ])
+                            ]),
                     ]),
             ]);
     }

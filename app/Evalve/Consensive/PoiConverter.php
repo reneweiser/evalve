@@ -30,7 +30,7 @@ final class PoiConverter
             'imageUrl' => Storage::disk('public')->url($sceneObject->imageUrl),
             'audioUrl' => '',
             'passthrough' => 0,
-            'poses' => $poses
+            'poses' => $poses,
         ];
     }
 }

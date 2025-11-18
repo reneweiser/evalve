@@ -3,9 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\SceneObject;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\SimplePage;
@@ -17,6 +15,7 @@ class BplForm extends SimplePage implements HasForms
     use InteractsWithForms;
 
     protected string $view = 'filament.pages.bpl-form';
+
     public $data = [
         'options' => '',
         'poi' => '',

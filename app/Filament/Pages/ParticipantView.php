@@ -23,7 +23,8 @@ class ParticipantView extends SimplePage implements HasForms
     use InteractsWithForms;
 
     protected string $view = 'filament.pages.participant-view';
-    protected Width | string | null $maxWidth = Width::ScreenLarge;
+
+    protected Width|string|null $maxWidth = Width::ScreenLarge;
 
     public ?string $questionId = null;
 
@@ -34,6 +35,7 @@ class ParticipantView extends SimplePage implements HasForms
     public ?string $userRole = null;
 
     protected ?ParticipantSession $session = null;
+
     public ?array $data = null;
 
     public function mount(): void
@@ -80,7 +82,7 @@ class ParticipantView extends SimplePage implements HasForms
             [
                 Text::make($this->question?->text ?? __('participant.question_not_found'))
                     ->size(TextSize::Large),
-                ...QuestionFieldFactory::make($this->question)
+                ...QuestionFieldFactory::make($this->question),
             ]
         )->statePath('data');
     }

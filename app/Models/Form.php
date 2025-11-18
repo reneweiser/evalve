@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Form extends Model
 {
-    use HasUlids, HasTeam;
+    use HasTeam, HasUlids;
 
     protected $casts = [
         'fields' => 'array',

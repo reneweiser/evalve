@@ -38,7 +38,7 @@ class ProjectResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            ViewProject::class
+            ViewProject::class,
         ]);
     }
 

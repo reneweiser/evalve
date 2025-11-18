@@ -35,7 +35,7 @@ class ClientDownloads extends Widget implements HasActions, HasSchemas
                             FileUpload::make('file')
                                 ->disk('public')
                                 ->directory('clients')
-                                ->getUploadedFileNameForStorageUsing(fn ($file) => 'latest.zip')
+                                ->getUploadedFileNameForStorageUsing(fn ($file) => 'latest.zip'),
                         ])
                         ->action(function () {
                             Notification::make()
@@ -44,18 +44,18 @@ class ClientDownloads extends Widget implements HasActions, HasSchemas
                                 ->send();
                         }),
                 ])
-                    ->buttonGroup()
+                    ->buttonGroup(),
             ]),
             Section::make('Panels')->schema([
                 ActionGroup::make([
                     Action::make('exampleSession')
                         ->url(route('public.moderator', [
                             'name' => 'example-session',
-                            'team' => Filament::getTenant()->id
+                            'team' => Filament::getTenant()->id,
                         ]), true),
                     Action::make('participant'),
                 ])
-                    ->buttonGroup()
+                    ->buttonGroup(),
             ]),
         ]);
     }

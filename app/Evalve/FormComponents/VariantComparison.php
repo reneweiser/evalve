@@ -31,10 +31,11 @@ class VariantComparison
                         ->multiple()
                         ->options(function (Get $get) {
                             $assetBundle = Asset::find($get('asset_bundle_id'));
+
                             return collect($assetBundle->properties['assets'])
                                 ->mapWithKeys(fn ($property) => [$property['name'] => $property['name']]);
                         }),
-                ])
+                ]),
         ];
     }
 }

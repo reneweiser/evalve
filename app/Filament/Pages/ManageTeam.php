@@ -19,14 +19,14 @@ class ManageTeam extends EditTenantProfile
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            Textinput::make('name')
+            Textinput::make('name'),
         ]);
     }
 
     public function submit(): void
     {
         $this->tenant->update([
-            'name' =>$this->data['name'],
+            'name' => $this->data['name'],
         ]);
 
         Notification::make()

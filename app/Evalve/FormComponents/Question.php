@@ -2,7 +2,6 @@
 
 namespace App\Evalve\FormComponents;
 
-use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,7 +17,7 @@ class Question
                 ->multiple()
                 ->options(function () {
                     return collect(Storage::disk('local')->json('soSettings.json')['modelGroups'])
-                        ->mapWithKeys(fn($group) => [$group['name'] => $group['name']])
+                        ->mapWithKeys(fn ($group) => [$group['name'] => $group['name']])
                         ->toArray();
                 }),
             Section::make('Result Billboard')

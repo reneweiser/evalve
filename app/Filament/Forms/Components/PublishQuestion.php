@@ -8,7 +8,7 @@ class PublishQuestion extends Field
 {
     protected string $view = 'filament.forms.components.publish-question';
 
-    protected string | null $question = null;
+    protected ?string $question = null;
 
     public function question(string $question): static
     {
