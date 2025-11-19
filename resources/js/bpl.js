@@ -106,8 +106,7 @@ window.addEventListener('open-question', async e => {
     const webview = await createWebView(value.participantView, 2, value.data.width, value.data.height, {
         position: value.billboardSettings.position,
         rotation: eulerToQuaternion(value.billboardSettings.rotation),
-        // scale: { x:0.5, y:0.5, z:0.5 }
-    });
+    }, 'Default,Default-HMD');
 
     cache.questions[value.billboardSettings.questionId] = webview;
 });
@@ -148,7 +147,7 @@ window.addEventListener('open-polling', async e => {
     const webView = await createWebView(value.pollingView, 1, value.data.size.width, value.data.size.height, {
         position: value.data.position,
         rotation: eulerToQuaternion(value.data.rotation),
-        scale: {x: 0.5, y: 0.5, z: 0.5}
+        scale: {x: 2, y: 2, z: 2}
     });
 
     const pollingView = hash(value.pollingView);
@@ -178,7 +177,7 @@ window.addEventListener('show-billboard', async e => {
     cache.billboard = await createWebView(value.url, 1, value.data.size.width, value.data.size.height, {
         position: value.data.position,
         rotation: eulerToQuaternion(value.data.rotation),
-        scale: {x: 0.5, y: 0.5, z: 0.5}
+        scale: {x: 2, y: 2, z: 2}
     });
 });
 
