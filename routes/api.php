@@ -53,7 +53,7 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
     Route::delete('/scene-objects/{sceneObject}/poses/{uuid}', [\App\Http\Controllers\Api\PoseController::class, 'destroy']);
 
     Route::get('/scene-objects/{sceneObject}', function (\App\Models\SceneObject $sceneObject) {
-        return $sceneObject;
+        return \App\Http\Resources\SceneObjectResource::make($sceneObject);
     });
 
     Route::post('/scene-objects', function (Request $request) {
@@ -73,11 +73,11 @@ Route::group(['prefix' => '/v1', 'middleware' => 'auth:sanctum'], function () {
     });
 
     Route::get('/scene-objects', function () {
-        return \App\Models\SceneObject::all();
+        return \App\Http\Resources\SceneObjectResource::collection(\App\Models\SceneObject::all());
     });
 
     Route::get('/teams/{team}/scene-objects', function (\App\Models\Team $team) {
-        return $team->sceneObjects;
+        return \App\Http\Resources\SceneObjectResource::collection($team->sceneObjects);
     });
 
     Route::get('/teams/{team}/asset-bundles', function (\App\Models\Team $team) {
