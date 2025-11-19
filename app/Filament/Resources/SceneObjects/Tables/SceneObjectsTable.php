@@ -14,6 +14,7 @@ class SceneObjectsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('name')
             ->columns([
                 ImageColumn::make('imageUrl')
                     ->disk('public')

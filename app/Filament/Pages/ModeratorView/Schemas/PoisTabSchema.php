@@ -46,7 +46,7 @@ class PoisTabSchema
                         $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                         $dispatcher->dispatchPoiSelected($sceneObject, $models);
                     })
-                    ->options(SceneObject::where('team_id', $teamId)->pluck('name', 'id')),
+                    ->options(SceneObject::where('team_id', $teamId)->orderBy('name')->pluck('name', 'id')),
             ]);
     }
 
