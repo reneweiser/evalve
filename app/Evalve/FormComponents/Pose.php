@@ -3,6 +3,7 @@
 namespace App\Evalve\FormComponents;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Str;
@@ -62,6 +63,11 @@ class Pose
                 ->statePath('rotation')
                 ->label('Rotation')
                 ->columns(3),
+            TextInput::make('scale')
+                ->numeric()
+                ->required(),
+            TextInput::make('referenceCategory'),
+            Toggle::make('overrideBlackWhitelists'),
         ];
     }
 }
