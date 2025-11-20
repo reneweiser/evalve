@@ -147,7 +147,7 @@ window.addEventListener('open-polling', async e => {
     const webView = await createWebView(value.pollingView, 1, value.data.size.width, value.data.size.height, {
         position: value.data.position,
         rotation: eulerToQuaternion(value.data.rotation),
-        scale: {x: 2, y: 2, z: 2}
+        scale: {x: value.data.scale, y: value.data.scale, z: value.data.scale}
     });
 
     const pollingView = hash(value.pollingView);
@@ -177,7 +177,7 @@ window.addEventListener('show-billboard', async e => {
     cache.billboard = await createWebView(value.url, 1, value.data.size.width, value.data.size.height, {
         position: value.data.position,
         rotation: eulerToQuaternion(value.data.rotation),
-        scale: {x: 2, y: 2, z: 2}
+        scale: {x: value.data.scale, y: value.data.scale, z: value.data.scale}
     });
 });
 

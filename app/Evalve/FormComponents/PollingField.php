@@ -60,6 +60,9 @@ class PollingField
                 ->statePath('rotation')
                 ->label('Rotation')
                 ->columns(3),
+            TextInput::make('scale')
+                ->numeric()
+                ->required(),
         ];
     }
 }
