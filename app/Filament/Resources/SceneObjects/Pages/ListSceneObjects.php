@@ -112,7 +112,7 @@ class ListSceneObjects extends ListRecords
                             ->map(fn ($poi) => PoiConverter::fromVr4MorePoi($poi));
 
                         foreach ($pois as $poi) {
-                            SceneObject::updateOrCreate(
+                            SceneObject::updateOrCreateWithPropertyMerge(
                                 ['name' => $poi['name']],
                                 $poi
                             );
@@ -129,7 +129,7 @@ class ListSceneObjects extends ListRecords
                             ->map(fn ($poi) => PoiConverter::fromVr4MorePoi($poi));
 
                         foreach ($pois as $poi) {
-                            SceneObject::updateOrCreate(
+                            SceneObject::updateOrCreateWithPropertyMerge(
                                 ['name' => $poi['name']],
                                 $poi
                             );

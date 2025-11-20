@@ -4,7 +4,6 @@ namespace App\Evalve\Consensive;
 
 use App\Models\SceneObject;
 use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Storage;
 
 final class PoiConverter
 {
@@ -30,7 +29,7 @@ final class PoiConverter
         return [
             'team_id' => Filament::getTenant()->id,
             'name' => $data['title'],
-            'imageUrl' => $data['imageUrl'],
+            'imageUrl' => $data['imageUrl'] ?? '',
             'transform' => [
                 'position' => $data['position'],
                 'rotation' => ['x' => 0, 'y' => 0, 'z' => 0],
@@ -65,13 +64,12 @@ final class PoiConverter
             ->map(function ($pose) {
                 $pose = $pose['data'];
                 return [
-                    'id' => $pose['id'],
                     'role' => $pose['role'],
                     'position' => $pose['position'],
                     'rotation' => $pose['rotation'],
-                    'scale' => $pose['scale'],
-                    'referenceCategory' => $pose['referenceCategory'],
-                    'overrideBlackWhitelists' => $pose['overrideBlackWhitelists'],
+                    'scale' => $pose['scale'] ?? 1,
+                    'referenceCategory' => $pose['referenceCategory'] ?? 'default',
+                    'overrideBlackWhitelists' => $pose['overrideBlackWhitelists'] ?? false,
                 ];
             })
             ->values()
@@ -79,16 +77,16 @@ final class PoiConverter
 
 
         return [
-            'order' => $cgData['order'],
+            'order' => $cgData['order'] ?? 0,
             'title' => $sceneObject->name,
             'poiId' => $sceneObject->name,
             'description' => '',
             'position' => $sceneObject->transform['position'],
-            'dwellTime' => $cgData['dwellTime'],
+            'dwellTime' => $cgData['dwellTime'] ?? -1,
             'imageUrl' => $sceneObject->imageUrl,
-            'passthrough' => $cgData['passthrough'],
+            'passthrough' => $cgData['passthrough'] ?? 1,
             'poses' => $poses,
-            'transitions' => $cgData['transitions'],
+            'transitions' => $cgData['transitions'] ?? [],
         ];
     }
 }
