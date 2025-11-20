@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\SceneObjects\Pages;
 
 use App\Evalve\Consensive\PoiConverter;
+use App\Evalve\Consensive\Vr4MorePoiService;
 use App\Evalve\SceneObjectSettings;
 use App\Filament\Resources\SceneObjects\SceneObjectResource;
 use App\Models\SceneObject;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
@@ -69,7 +71,7 @@ class ListSceneObjects extends ListRecords
                     $pois = SceneObject::query()
                         ->whereIn('id', $data['pois'])
                         ->get()
-                        ->map(fn ($poi) => PoiConverter::convert($poi))
+                        ->map(fn ($poi) => PoiConverter::toVr4MorePoi($poi))
                         ->toArray();
                     $body = json_encode(['pois' => $pois]);
 
@@ -127,49 +129,40 @@ class ListSceneObjects extends ListRecords
                         ->success()
                         ->send();
                 }),
-            Action::make('Import Pois')
-                ->schema([
-                    FileUpload::make('json_file')
-                        ->disk('local'),
-                ])
-                ->action(function (array $data): void {
-                    $pois = collect(Storage::disk('local')->json($data['json_file'])['pois']);
-                    $poisFormatted = $pois->map(fn ($poi) => [
-                        'name' => $poi['title'],
-                        'team_id' => Filament::getTenant()->id,
-                        'transform' => [
-                            'position' => $poi['position'],
-                            'rotation' => ['x' => 0.0, 'y' => 0.0, 'z' => 0.0],
-                        ],
-                        'properties' => self::makeProperties($poi),
-                    ]);
+            ActionGroup::make([
+                Action::make('fromApi')
+                    ->label('From API')
+                    ->action(function (Vr4MorePoiService $service) {
+                        $pois = collect($service->getPois()['pois'])
+                            ->map(fn ($poi) => PoiConverter::fromVr4MorePoi($poi));
 
-                    foreach ($poisFormatted as $poi) {
-                        SceneObject::updateOrCreate(
-                            ['name' => $poi['name']],
-                            $poi
-                        );
-                    }
-                }),
+                        foreach ($pois as $poi) {
+                            SceneObject::updateOrCreate(
+                                ['name' => $poi['name']],
+                                $poi
+                            );
+                        }
+                    }),
+                Action::make('fromFile')
+                    ->label('From File')
+                    ->schema([
+                        FileUpload::make('json_file')
+                            ->disk('local'),
+                    ])
+                    ->action(function (array $data): void {
+                        $pois = collect(Storage::disk('local')->json($data['json_file'])['pois'])
+                            ->map(fn ($poi) => PoiConverter::fromVr4MorePoi($poi));
+
+                        foreach ($pois as $poi) {
+                            SceneObject::updateOrCreate(
+                                ['name' => $poi['name']],
+                                $poi
+                            );
+                        }
+                    }),
+            ])
+                ->button()
+                ->label('Import POIs'),
         ];
-    }
-
-    private static function makeProperties($poi)
-    {
-        $poses = [];
-
-        foreach ($poi['poses'] as $pose) {
-            $poses[] = [
-                'data' => [
-                    'id' => $pose['id'],
-                    'role' => $pose['role'],
-                    'position' => $pose['position'],
-                    'rotation' => $pose['rotation'],
-                ],
-                'type' => 'pose',
-            ];
-        }
-
-        return $poses;
     }
 }
