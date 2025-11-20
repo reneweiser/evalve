@@ -54,28 +54,41 @@ final class PoiConverter
 
     public static function toVr4MorePoi(SceneObject $sceneObject): array
     {
+        $properties = collect($sceneObject->properties);
+        $cgData = $properties->firstWhere('type', 'cgData')['data'];
+        if (!$cgData) {
+            throw new \Exception('No CG data found');
+        }
+
         $poses = collect($sceneObject->properties)
             ->where('type', 'pose')
-            ->map(fn ($pose) => [
-                ...$pose['data'],
-                'scale' => 1.0,
-                'overrideBlackWhitelists' => false,
-            ])
+            ->map(function ($pose) {
+                $pose = $pose['data'];
+                return [
+                    'id' => $pose['id'],
+                    'role' => $pose['role'],
+                    'position' => $pose['position'],
+                    'rotation' => $pose['rotation'],
+                    'scale' => $pose['scale'],
+                    'referenceCategory' => $pose['referenceCategory'],
+                    'overrideBlackWhitelists' => $pose['overrideBlackWhitelists'],
+                ];
+            })
             ->values()
             ->toArray();
 
+
         return [
-            'order' => 0,
+            'order' => $cgData['order'],
             'title' => $sceneObject->name,
             'poiId' => $sceneObject->name,
             'description' => '',
             'position' => $sceneObject->transform['position'],
-            'fixtureReference' => '',
-            'dwellTime' => -1.0,
-            'imageUrl' => Storage::disk('public')->url($sceneObject->imageUrl),
-            'audioUrl' => '',
-            'passthrough' => 0,
+            'dwellTime' => $cgData['dwellTime'],
+            'imageUrl' => $sceneObject->imageUrl,
+            'passthrough' => $cgData['passthrough'],
             'poses' => $poses,
+            'transitions' => $cgData['transitions'],
         ];
     }
 }

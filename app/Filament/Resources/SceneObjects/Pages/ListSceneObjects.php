@@ -99,31 +99,6 @@ class ListSceneObjects extends ListRecords
                         return;
                     }
 
-                    collect($response->json('pois'))
-                        ->each(function ($poi) {
-                            $sceneObject = SceneObject::query()
-                                ->where('name', $poi['title'])
-                                ->first();
-
-                            $properties = collect($sceneObject->properties)
-                                ->reject(fn ($value) => $value['type'] === 'cgData')
-                                ->push([
-                                    'data' => [
-                                        'id' => $poi['id'],
-                                        'order' => $poi['order'],
-                                        'fixtureReference' => $poi['fixtureReference'],
-                                        'dwellTime' => $poi['dwellTime'],
-                                        'passthrough' => $poi['passthrough'],
-                                    ],
-                                    'type' => 'cgData',
-                                ])
-                                ->toArray();
-
-                            $sceneObject->update([
-                                'properties' => $properties,
-                            ]);
-                        });
-
                     Notification::make()
                         ->title('Data pushed to Commonground. VR4More responded: '.$response->reason())
                         ->success()
