@@ -54,11 +54,12 @@ final class PoiConverter
     public static function toVr4MorePoi(SceneObject $sceneObject): array
     {
         $properties = collect($sceneObject->properties);
-        $cgData = $properties->firstWhere('type', 'cgData')['data'];
+        $cgData = $properties->firstWhere('type', 'cgData');
         if (!$cgData) {
             throw new \Exception('No CG data found');
         }
 
+        $cgData = $cgData['data'];
         $poses = collect($sceneObject->properties)
             ->where('type', 'pose')
             ->map(function ($pose) {
