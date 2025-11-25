@@ -43,6 +43,7 @@ class CGData
                         ->options([
                             'Default' => 'Default',
                             'Default-HMD' => 'Default-HMD',
+                            'Moderator' => 'Moderator',
                         ]),
                     TextInput::make('time')
                         ->type('number'),
