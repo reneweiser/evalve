@@ -30,7 +30,6 @@ class Results extends TableWidget
                 TextColumn::make('session_id'),
                 TextColumn::make('alias'),
                 TextColumn::make('response_data')
-                    ->tooltip(fn ($state) => $state ?? '')
                     ->limit(15),
                 TextColumn::make('submitted_at')->dateTime(),
             ])
