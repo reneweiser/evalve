@@ -28,6 +28,7 @@ class Pose
                 ->options([
                     'Default' => 'Default',
                     'Default-HMD' => 'Default-HMD',
+                    'Moderator' => 'Moderator',
                 ]),
             FusedGroup::make([
                 TextInput::make('x')
