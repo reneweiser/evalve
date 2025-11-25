@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\ManageTeam;
 use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Filament\Widgets\Results;
 use App\Livewire\ClientDownloads;
 use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
@@ -49,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
                 //                AccountWidget::class,
                 //                FilamentInfoWidget::class,
                 ClientDownloads::class,
+                Results::class,
             ])
             ->middleware([
                 EncryptCookies::class,
