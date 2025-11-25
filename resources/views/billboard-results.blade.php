@@ -75,6 +75,7 @@
                         }]
                     },
                     options: {
+                        animation: false,
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
@@ -136,6 +137,7 @@
                         }]
                     },
                     options: {
+                        animation: false,
                         indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
@@ -183,9 +185,9 @@
             new Chart(ctx, chartConfig);
 
             // Auto-refresh every 5 seconds to update results
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 5000);
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
         </script>
     @endif
 </body>
