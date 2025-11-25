@@ -92,7 +92,7 @@
                                     stepSize: 1,
                                     color: 'rgba(255, 255, 255, 0.8)',
                                     font: {
-                                        size: 16
+                                        size: 32
                                     }
                                 },
                                 grid: {
@@ -103,7 +103,7 @@
                                 ticks: {
                                     color: 'rgba(255, 255, 255, 0.8)',
                                     font: {
-                                        size: 16
+                                        size: 32
                                     }
                                 },
                                 grid: {
@@ -114,19 +114,25 @@
                     }
                 };
             } else if (results.type === 'semantic_differential') {
-                // Horizontal bar chart for semantic differential
+                // Vertical line chart for semantic differential
                 console.log(results)
                 chartConfig = {
-                    type: 'bar',
+                    type: 'line',
                     data: {
                         labels: results.results.map(r => r.label),
                         datasets: [{
                             label: 'Average Rating',
                             data: results.results.map(r => r.average),
-                            backgroundColor: 'rgba(168, 85, 247, 0.8)',
+                            // backgroundColor: 'rgba(168, 85, 247, 0.2)',
                             borderColor: 'rgba(168, 85, 247, 1)',
-                            borderWidth: 2,
-                            borderRadius: 8,
+                            borderWidth: 3,
+                            pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0,
+                            fill: true,
                         }]
                     },
                     options: {
@@ -138,14 +144,37 @@
                                 display: false
                             },
                             title: {
-                                display: true,
-                                text: results.question
+                                display: false
                             }
                         },
                         scales: {
                             x: {
-                                max: results.scale.max
+                                min: results.scale.min,
+                                max: results.scale.max,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: 'rgba(255, 255, 255, 0.8)',
+                                    font: {
+                                        size: 32
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
                             },
+                            y: {
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.8)',
+                                    font: {
+                                        size: 24
+                                    },
+                                    maxRotation: 0,
+                                    minRotation: 0
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
                         }
                     }
                 };
