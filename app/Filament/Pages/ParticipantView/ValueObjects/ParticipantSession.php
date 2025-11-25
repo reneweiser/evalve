@@ -2,13 +2,12 @@
 
 namespace App\Filament\Pages\ParticipantView\ValueObjects;
 
-use Illuminate\Support\Str;
-
 class ParticipantSession
 {
     public function __construct(
         public readonly string $sessionId,
-        public readonly ?string $role = null,
+        public readonly string $alias,
+        public readonly string $role,
     ) {}
 
     /**
@@ -21,28 +20,13 @@ class ParticipantSession
     {
         $userAlias = request()->get('userAlias');
         $userRole = request()->get('userRole');
+        $sessionId = request()->get('sessionName');
 
-        // VR client provided identity via query parameters
-        if ($userAlias) {
-            return new self($userAlias, $userRole);
-        }
-
-        // Fall back to session-based identity for web users
-        $sessionId = session()->get('participant_session_id');
-
-        if (! $sessionId) {
-            $sessionId = Str::ulid()->toString();
-            session()->put('participant_session_id', $sessionId);
-        }
-
-        return new self($sessionId);
+        return new self($sessionId, $userAlias, $userRole);
     }
 
     public static function create(): self
     {
-        $sessionId = Str::ulid()->toString();
-        session()->put('participant_session_id', $sessionId);
-
-        return new self($sessionId);
+        return new self('default-session', 'default-user', 'Default');
     }
 }

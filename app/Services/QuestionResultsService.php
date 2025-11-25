@@ -10,7 +10,9 @@ class QuestionResultsService
 {
     public function aggregateResults(Question $question): array
     {
+        $session = request()->query('sessionName');
         $responses = QuestionResponse::where('question_id', $question->id)
+            ->where('session_id', $session)
             ->whereNotNull('submitted_at')
             ->get();
 
@@ -122,7 +124,7 @@ class QuestionResultsService
             'chartType' => 'horizontalBar',
             'scale' => [
                 'min' => $properties['minValue'] ?? 1,
-                'max' => $properties['maxValue'] ?? 7,
+                'max' => $properties['size'] ?? 7,
             ],
         ];
     }

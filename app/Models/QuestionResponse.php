@@ -13,6 +13,8 @@ class QuestionResponse extends Model
     protected $fillable = [
         'question_id',
         'session_id',
+        'alias',
+        'role',
         'response_data',
         'submitted_at',
     ];

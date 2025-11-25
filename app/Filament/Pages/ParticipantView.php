@@ -33,6 +33,7 @@ class ParticipantView extends SimplePage implements HasForms
     public ?string $userAlias = null;
 
     public ?string $userRole = null;
+    public ?string $sessionName = null;
 
     protected ?ParticipantSession $session = null;
 
@@ -43,6 +44,7 @@ class ParticipantView extends SimplePage implements HasForms
         $this->questionId = request()->get('questionId');
         $this->userAlias = request()->get('userAlias');
         $this->userRole = request()->get('userRole');
+        $this->sessionName = request()->get('sessionName');
         $this->question = QuestionLoaderService::load($this->questionId);
         $this->session = ParticipantSession::fromRequest();
         $this->form->fill();
@@ -66,7 +68,7 @@ class ParticipantView extends SimplePage implements HasForms
         if (! $this->session) {
             // Use persisted Livewire properties if available (from VR clients)
             if ($this->userAlias) {
-                $this->session = new ParticipantSession($this->userAlias, $this->userRole);
+                $this->session = new ParticipantSession($this->sessionName, $this->userAlias, $this->userRole);
             } else {
                 // Fall back to session-based identity for web users
                 $this->session = ParticipantSession::fromRequest();

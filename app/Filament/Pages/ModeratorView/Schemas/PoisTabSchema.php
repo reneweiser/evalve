@@ -18,13 +18,13 @@ use Filament\Support\Icons\Heroicon;
 
 class PoisTabSchema
 {
-    public static function make(string $teamId): Tabs\Tab
+    public static function make(string $teamId, string $sessionName): Tabs\Tab
     {
         return Tabs\Tab::make(__('moderator.pois'))
             ->columns(4)
             ->schema([
                 self::buildPoiSelectionSection($teamId),
-                self::buildPoiDetailsSection(),
+                self::buildPoiDetailsSection($sessionName),
             ]);
     }
 
@@ -50,12 +50,12 @@ class PoisTabSchema
             ]);
     }
 
-    private static function buildPoiDetailsSection(): Section
+    private static function buildPoiDetailsSection(string $sessionName): Section
     {
         return Section::make('')
             ->columnSpan(3)
             ->contained(false)
-            ->schema(function (Get $get): array {
+            ->schema(function (Get $get) use ($sessionName) {
                 $poiId = $get('pois');
 
                 if ($poiId === null) {
@@ -71,20 +71,20 @@ class PoisTabSchema
                     return [];
                 }
 
-                return self::buildPoiContent($sceneObject);
+                return self::buildPoiContent($sceneObject, $sessionName);
             });
     }
 
-    private static function buildPoiContent(SceneObject $sceneObject): array
+    private static function buildPoiContent(SceneObject $sceneObject, string $sessionName): array
     {
         $questions = Question::whereIn('id', $sceneObject->getProperties(PropertyType::question)->pluck('questionId'))
             ->pluck('text', 'id')
             ->all();
 
         return $sceneObject->getPropertiesInOrder(PropertyType::question, PropertyType::pollingField)
-            ->map(function ($property) use ($sceneObject, $questions) {
+            ->map(function ($property) use ($sceneObject, $questions, $sessionName) {
                 return match ($property['type']) {
-                    'question' => QuestionSection::make($property['data'], $questions),
+                    'question' => QuestionSection::make($property['data'], $questions, $sessionName),
                     'pollingField' => PollingSection::make($sceneObject, $property['data']),
                 };
             })

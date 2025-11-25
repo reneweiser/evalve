@@ -61,7 +61,7 @@ class ModeratorView extends SimplePage implements HasForms
                     ->contained(false)
                     ->statePath('data')
                     ->tabs([
-                        PoisTabSchema::make($this->team),
+                        PoisTabSchema::make($this->team, $this->name),
                         ModelsTabSchema::make($this->modelGroups),
                         SettingsTabSchema::make(),
                     ]),

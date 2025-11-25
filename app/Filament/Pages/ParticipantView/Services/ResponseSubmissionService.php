@@ -13,6 +13,8 @@ class ResponseSubmissionService
         return QuestionResponse::create([
             'question_id' => $responseData->questionId,
             'session_id' => $session->sessionId,
+            'alias' => $session->alias,
+            'role' => $session->role,
             'response_data' => $responseData->data,
             'submitted_at' => now(),
         ]);
@@ -22,6 +24,7 @@ class ResponseSubmissionService
     {
         return QuestionResponse::where('question_id', $questionId)
             ->where('session_id', $session->sessionId)
+            ->where('alias', $session->alias)
             ->exists();
     }
 }

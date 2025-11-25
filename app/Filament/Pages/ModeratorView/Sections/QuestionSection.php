@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 
 class QuestionSection
 {
-    public static function make(array $questionDataArray, array $questions): Section
+    public static function make(array $questionDataArray, array $questions, string $sessionName): Section
     {
         $questionData = QuestionData::fromArray($questionDataArray);
 
@@ -26,7 +26,7 @@ class QuestionSection
                 self::buildShowModelsAction($questionData),
             ])
             ->footer([
-                self::buildOpenAction($questionData),
+                self::buildOpenAction($questionData, $sessionName),
                 self::buildCloseAction($questionData),
                 self::buildShowResultsAction($questionData),
                 self::buildHideResultsAction($questionData),
@@ -52,12 +52,12 @@ class QuestionSection
             });
     }
 
-    private static function buildOpenAction(QuestionData $questionData): Action
+    private static function buildOpenAction(QuestionData $questionData, string $sessionName): Action
     {
         return Action::make('openQuestion')
             ->label(__('moderator.open'))
-            ->action(function ($component) use ($questionData) {
-                $participantUrl = self::buildParticipantUrl($questionData->questionId);
+            ->action(function ($component) use ($questionData, $sessionName) {
+                $participantUrl = self::buildParticipantUrl($questionData->questionId, $sessionName);
                 $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                 $dispatcher->dispatchOpenQuestion($questionData, $participantUrl);
             });
@@ -105,10 +105,11 @@ class QuestionSection
      * The $USERNAME$ and $ROLE$ placeholders are substituted by the VR client
      * with actual user values before the webview is displayed in the scene.
      */
-    private static function buildParticipantUrl(string $questionId): string
+    private static function buildParticipantUrl(string $questionId, string $sessionName): string
     {
         return Str::of(route('public.participant', [
             'questionId' => $questionId,
+            'sessionName' => $sessionName,
             'userAlias' => '$USERNAME$',
             'userRole' => '$ROLE$',
         ]))->replace('%24', '$')->value();
