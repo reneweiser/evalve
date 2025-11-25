@@ -28,7 +28,7 @@ class QuestionSection
             ->footer([
                 self::buildOpenAction($questionData, $sessionName),
                 self::buildCloseAction($questionData),
-                self::buildShowResultsAction($questionData),
+                self::buildShowResultsAction($questionData, $sessionName),
                 self::buildHideResultsAction($questionData),
             ])
             ->schema([
@@ -74,14 +74,17 @@ class QuestionSection
             });
     }
 
-    private static function buildShowResultsAction(QuestionData $questionData): Action
+    private static function buildShowResultsAction(QuestionData $questionData, string $sessionName): Action
     {
         return Action::make('showResults')
             ->label(__('moderator.show_results'))
             ->color('success')
             ->icon(Heroicon::ChartBar)
-            ->action(function ($component) use ($questionData) {
-                $billboardUrl = route('public.billboard', ['questionId' => $questionData->questionId]);
+            ->action(function ($component) use ($questionData, $sessionName) {
+                $billboardUrl = route('public.billboard', [
+                    'questionId' => $questionData->questionId,
+                    'sessionName' => $sessionName,
+                ]);
                 $dispatcher = new SceneObjectDispatcher($component->getLivewire());
                 $dispatcher->dispatchShowBillboard($questionData, $billboardUrl);
             });
