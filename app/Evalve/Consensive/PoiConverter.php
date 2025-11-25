@@ -2,8 +2,10 @@
 
 namespace App\Evalve\Consensive;
 
+use App\Evalve\SceneObjectSettings;
 use App\Models\SceneObject;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Storage;
 
 final class PoiConverter
 {
@@ -54,10 +56,7 @@ final class PoiConverter
     public static function toVr4MorePoi(SceneObject $sceneObject): array
     {
         $properties = collect($sceneObject->properties);
-        $cgData = $properties->firstWhere('type', 'cgData');
-        if (!$cgData) {
-            throw new \Exception('No CG data found');
-        }
+        $cgData = $properties->firstWhere('type', 'cgData') ?? ['data' => []];
 
         $cgData = $cgData['data'];
         $poses = collect($sceneObject->properties)
@@ -76,6 +75,9 @@ final class PoiConverter
             ->values()
             ->toArray();
 
+        $imageUrl = $sceneObject->imageUrl
+            ? asset(Storage::url($sceneObject->imageUrl))
+            : 'https://placehold.co/150x150?text=Thumbnail+missing';
 
         return [
             'order' => $cgData['order'] ?? 0,
@@ -84,7 +86,7 @@ final class PoiConverter
             'description' => '',
             'position' => $sceneObject->transform['position'],
             'dwellTime' => $cgData['dwellTime'] ?? -1,
-            'imageUrl' => $sceneObject->imageUrl,
+            'imageUrl' => $imageUrl,
             'passthrough' => $cgData['passthrough'] ?? 1,
             'poses' => $poses,
             'transitions' => $cgData['transitions'] ?? [],

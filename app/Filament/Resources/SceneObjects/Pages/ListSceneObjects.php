@@ -19,6 +19,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -107,6 +108,8 @@ class ListSceneObjects extends ListRecords
             ActionGroup::make([
                 Action::make('fromApi')
                     ->label('From API')
+                    ->disabled()
+                    ->tooltip('Disabled: More testing needed')
                     ->action(function (Vr4MorePoiService $service) {
                         $pois = collect($service->getPois()['pois'])
                             ->map(fn ($poi) => PoiConverter::fromVr4MorePoi($poi));
@@ -120,6 +123,8 @@ class ListSceneObjects extends ListRecords
                     }),
                 Action::make('fromFile')
                     ->label('From File')
+                    ->disabled()
+                    ->tooltip('Disabled: More testing needed')
                     ->schema([
                         FileUpload::make('json_file')
                             ->disk('local'),
@@ -137,6 +142,7 @@ class ListSceneObjects extends ListRecords
                     }),
             ])
                 ->button()
+
                 ->label('Import POIs'),
         ];
     }
