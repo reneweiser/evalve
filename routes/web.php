@@ -18,7 +18,7 @@ Route::get('polling', function () {
     return view('polling', ['image' => $image]);
 })->name('public.polling');
 
-Route::get('vr4more-pois', fn (\App\Evalve\Consensive\Vr4MorePoiService $service) => $service->getPois())->name('public.pois');
-Route::get('pois', function (\App\Evalve\Consensive\PoiConverter $converter) {
-    return \App\Models\SceneObject::all()->map(fn ($so) => $converter->toVr4MorePoi($so))->toArray();
-})->name('public.pois');
+//Route::get('vr4more-pois', fn (\App\Evalve\Consensive\Vr4MorePoiService $service) => $service->getPois())->name('public.vr4more.pois');
+//Route::get('pois', function (\App\Evalve\Consensive\PoiConverter $converter) {
+//    return \App\Models\SceneObject::all()->map(fn ($so) => $converter->toVr4MorePoi($so))->toArray();
+//})->name('public.pois');
