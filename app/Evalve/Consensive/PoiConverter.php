@@ -31,7 +31,7 @@ final class PoiConverter
         return [
             'team_id' => Filament::getTenant()->id,
             'name' => $data['title'],
-            'imageUrl' => $data['imageUrl'] ?? '',
+            'imageUrl' => $data['imageUrl'] ?? 'https://placehold.co/150x150?text=Thumbnail+missing',
             'transform' => [
                 'position' => $data['position'],
                 'rotation' => ['x' => 0, 'y' => 0, 'z' => 0],
@@ -45,6 +45,7 @@ final class PoiConverter
                         'title' => $data['title'],
                         'order' => $data['order'],
                         'dwellTime' => $data['dwellTime'],
+                        'blacklist' => $data['blacklist'],
                         'passthrough' => $data['passthrough'],
                         'transitions' => $data['transitions'],
                     ]
