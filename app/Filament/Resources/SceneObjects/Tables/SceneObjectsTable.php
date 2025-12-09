@@ -20,7 +20,8 @@ class SceneObjectsTable
                     ->disk('public')
                     ->defaultImageUrl('https://placehold.co/150x150?text=Thumbnail+missing')
                     ->imageSize(150),
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->searchable(),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -2,6 +2,7 @@
 
 namespace App\Evalve\FormComponents;
 
+use App\Evalve\SceneObjectSettings;
 use App\Models\SceneObject;
 use Filament\Forms\Components\CodeEditor;
 use Filament\Forms\Components\Repeater;
@@ -11,6 +12,8 @@ class CGData
 {
     public static function make(): array
     {
+        $options = collect(SceneObjectSettings::get()['modelGroups'])
+            ->mapWithKeys(fn ($item) => [$item['name'] => $item['name']]);
         return [
             TextInput::make('id')
                 ->numeric()
@@ -19,6 +22,9 @@ class CGData
             TextInput::make('title'),
             TextInput::make('order')->numeric(),
             TextInput::make('dwellTime')->numeric(),
+            \Filament\Forms\Components\Select::make('blacklists')
+                ->multiple()
+                ->options($options),
             \Filament\Forms\Components\Select::make('passthrough')
                 ->selectablePlaceholder(false)
                 ->options([

@@ -45,7 +45,7 @@ final class PoiConverter
                         'title' => $data['title'],
                         'order' => $data['order'],
                         'dwellTime' => $data['dwellTime'],
-                        'blacklist' => $data['blacklist'],
+                        'blacklist' => $data['blacklist'] ?? [],
                         'passthrough' => $data['passthrough'],
                         'transitions' => $data['transitions'],
                     ]
@@ -76,9 +76,17 @@ final class PoiConverter
             ->values()
             ->toArray();
 
-        $imageUrl = $sceneObject->imageUrl
-            ? asset(Storage::url($sceneObject->imageUrl))
-            : 'https://placehold.co/150x150?text=Thumbnail+missing';
+        $imageUrl = 'https://placehold.co/150x150?text=Thumbnail+missing';
+
+        if (str_starts_with($sceneObject->imageUrl, 'https://data.vr4more.com')) {
+            $imageUrl = $sceneObject->imageUrl;
+        }
+        if (str_starts_with($sceneObject->imageUrl, 'https://projects.vreval.de')) {
+            $imageUrl = $sceneObject->imageUrl;
+        }
+        if (str_starts_with($sceneObject->imageUrl, 'thumnails')) {
+            $imageUrl = asset(Storage::url($sceneObject->imageUrl));
+        }
 
         return [
             'order' => $cgData['order'] ?? 0,
@@ -87,6 +95,7 @@ final class PoiConverter
             'description' => '',
             'position' => $sceneObject->transform['position'],
             'dwellTime' => $cgData['dwellTime'] ?? -1,
+            'blacklist' => array_values($cgData['blacklists'] ?? []) ?? [],
             'imageUrl' => $imageUrl,
             'passthrough' => $cgData['passthrough'] ?? 1,
             'poses' => $poses,
